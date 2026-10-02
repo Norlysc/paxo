@@ -23,7 +23,7 @@ export function Faq() {
   return (
     <section id="faq" className="relative overflow-hidden bg-paxo-neutral py-20">
       <div aria-hidden className="pointer-events-none absolute -right-32 top-12 h-80 w-80 rounded-full border-[28px] border-paxo-blue/5" />
-      <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-4 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+      <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
         <div>
           <h2 className="flex items-center gap-3 font-display text-3xl font-bold text-paxo-blue sm:text-4xl">
             <span className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full bg-white ring-1 ring-paxo-blue/10 sm:h-9 sm:w-9">

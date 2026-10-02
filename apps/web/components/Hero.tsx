@@ -32,7 +32,9 @@ export function Hero() {
         <path d="M0 0H1440V620C1210 558 1030 635 820 688C590 747 300 735 0 628V0Z" fill="url(#hero-blue)" />
       </svg>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 pb-40 sm:px-6 sm:py-24 sm:pb-44 lg:px-8 lg:py-28 lg:pb-48 xl:py-32">
+      {/* max-w-6xl como el resto de secciones: con max-w-7xl el titular
+          arrancaba 64px antes que el logo del header y no alineaban. */}
+      <div className="relative z-10 mx-auto max-w-6xl px-4 py-20 pb-40 sm:px-6 sm:py-24 sm:pb-44 lg:py-28 lg:pb-48 xl:py-32">
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,0.44fr)_minmax(0,0.56fr)] lg:gap-6 xl:gap-10">
           <motion.div
             initial="hidden"

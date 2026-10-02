@@ -38,7 +38,10 @@ export function Header() {
           />
         </a>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        {/* El menu completo aparece desde lg y no desde md: a 768px no caben
+            el logo, los cinco enlaces y el boton sin solaparse. Las tablets
+            usan el menu desplegable. */}
+        <nav className="hidden items-center gap-8 lg:flex">
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}
@@ -63,7 +66,7 @@ export function Header() {
             aria-expanded={menuAbierto}
             aria-controls="menu-movil"
             aria-label={menuAbierto ? "Cerrar menú" : "Abrir menú"}
-            className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 text-paxo-blue transition-colors hover:bg-paxo-neutral md:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 text-paxo-blue transition-colors hover:bg-paxo-neutral lg:hidden"
           >
             {menuAbierto ? <CloseIcon className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
           </button>
@@ -73,7 +76,7 @@ export function Header() {
       {menuAbierto && (
         <nav
           id="menu-movil"
-          className="border-t border-slate-200 bg-white px-4 pb-5 pt-2 shadow-lg md:hidden"
+          className="border-t border-slate-200 bg-white px-4 pb-5 pt-2 shadow-lg sm:px-6 lg:hidden"
         >
           {NAV_LINKS.map((link) => (
             <a

@@ -40,7 +40,7 @@ export function Testimonials() {
       <svg aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-20 w-full opacity-25" viewBox="0 0 1440 160" preserveAspectRatio="none">
         <path d="M0 94C250 22 450 155 724 117C1005 79 1210 20 1440 71V160H0V94Z" fill="white" />
       </svg>
-      <div className="relative mx-auto max-w-6xl px-4">
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         <h2 className="flex items-center justify-center gap-3 font-display text-3xl font-bold text-white sm:text-4xl">
           <span className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full bg-white ring-1 ring-white/30 sm:h-9 sm:w-9">
             <Image src="/brand/logo-icon.jpg" alt="" fill sizes="36px" className="object-contain" />

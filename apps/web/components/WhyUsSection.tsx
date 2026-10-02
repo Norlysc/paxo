@@ -11,7 +11,7 @@ const REASONS = [
 export function WhyUsSection() {
   return (
     <section className="bg-white py-20">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-4 lg:grid-cols-2">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
         <div className="relative h-72 overflow-hidden rounded-[2rem] shadow-xl ring-1 ring-paxo-neutral-dark sm:h-96">
           <Image
             src="/brand/why-us-team.jpg"

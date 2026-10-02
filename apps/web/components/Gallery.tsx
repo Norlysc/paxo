@@ -66,7 +66,7 @@ export function Gallery() {
 
   return (
     <section id="proyectos" className="bg-white py-20">
-      <div className="mx-auto max-w-6xl px-4">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <h2 className="flex items-center justify-center gap-3 font-display text-3xl font-bold text-paxo-blue sm:text-4xl">
           <span className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full bg-white ring-1 ring-paxo-blue/10 sm:h-9 sm:w-9">
             <Image src="/brand/logo-icon.jpg" alt="" fill sizes="36px" className="object-contain" />

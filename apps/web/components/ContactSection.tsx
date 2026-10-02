@@ -26,7 +26,7 @@ export function ContactSection() {
     <section id="cotizar" className="relative overflow-hidden bg-paxo-blue-dark py-20 sm:py-24">
       <div aria-hidden className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full border-[30px] border-white/5" />
       <div aria-hidden className="pointer-events-none absolute -bottom-48 -right-28 h-[30rem] w-[30rem] rounded-full border-[24px] border-paxo-red/20" />
-      <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-start lg:gap-16">
+      <div className="relative mx-auto grid max-w-6xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-start lg:gap-16">
         <div className="max-w-2xl">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-paxo-red">Conversemos sobre tu proyecto</p>
           <h2 className="mt-4 flex items-center gap-3 font-display text-3xl font-bold text-white sm:text-4xl">
