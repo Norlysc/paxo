@@ -10,9 +10,8 @@ const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.solucionespaxo.com"),
-  icons: {
-    icon: "/icon.svg",
-  },
+  // Los iconos los resuelve Next.js desde app/icon.jpg y app/apple-icon.jpg.
+  // No declarar `icons` aqui: un override manual gana sobre esos archivos.
   title: {
     default: "SOLUCIONES PAXO C.A. | Construcción, Mantenimiento y Seguridad Electrónica",
     template: "%s | PAXO",

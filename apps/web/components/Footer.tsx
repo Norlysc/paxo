@@ -30,6 +30,8 @@ export function Footer() {
                 key={name}
                 href={href}
                 aria-label={name}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-paxo-neutral-dark bg-white text-paxo-ink-light transition-colors hover:border-paxo-red hover:bg-paxo-red hover:text-white"
               >
                 <Icon className="h-4 w-4" />
@@ -41,16 +43,28 @@ export function Footer() {
           <p className="text-sm font-bold uppercase tracking-[0.16em] text-paxo-ink">Servicios</p>
           <ul className="mt-4 space-y-2 text-sm text-paxo-ink-light">
             {SERVICE_CATEGORIES.slice(0, 6).map((s) => (
-              <li key={s.slug}>{s.label}</li>
+              <li key={s.slug}>
+                <a href="#servicios" className="transition-colors hover:text-paxo-blue">
+                  {s.label}
+                </a>
+              </li>
             ))}
           </ul>
         </div>
         <div>
           <p className="text-sm font-bold uppercase tracking-[0.16em] text-paxo-ink">Contacto</p>
           <ul className="mt-4 space-y-2 text-sm text-paxo-ink-light">
-            <li>{COMPANY.phoneNumber}</li>
-            <li>{COMPANY.email}</li>
-            <li>Venezuela</li>
+            <li>
+              <a href={`tel:+${COMPANY.whatsappNumber}`} className="transition-colors hover:text-paxo-blue">
+                {COMPANY.phoneNumber}
+              </a>
+            </li>
+            <li>
+              <a href={`mailto:${COMPANY.email}`} className="transition-colors hover:text-paxo-blue">
+                {COMPANY.email}
+              </a>
+            </li>
+            <li className="leading-6">{COMPANY.address}</li>
           </ul>
         </div>
       </div>
