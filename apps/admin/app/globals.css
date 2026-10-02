@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-inter), system-ui, sans-serif;
+  --paxo-blue: #2158b5;
+  --paxo-blue-dark: #18438e;
+  --paxo-red: #a61d28;
+  --paxo-red-dark: #7f151d;
+  --paxo-neutral: #f5f7fa;
+  --paxo-neutral-dark: #dfe5ec;
+  --paxo-ink: #111827;
+  --paxo-ink-light: #4b5563;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-[#f3f6fb] text-paxo-ink antialiased;
+  font-family: var(--font-sans);
+  background-image: radial-gradient(circle at top left, rgba(33, 88, 181, 0.08), transparent 28%);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.04em;
+}
+
+::selection {
+  background: rgba(33, 88, 181, 0.15);
+}

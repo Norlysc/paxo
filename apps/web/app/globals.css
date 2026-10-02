@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-inter), system-ui, sans-serif;
+  --paxo-blue: #2158b5;
+  --paxo-blue-dark: #18438e;
+  --paxo-red: #a61d28;
+  --paxo-red-dark: #7f151d;
+  --paxo-neutral: #f5f7fa;
+  --paxo-neutral-dark: #dfe5ec;
+  --paxo-ink: #111827;
+  --paxo-ink-light: #4b5563;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-[#f5f7fb] text-paxo-ink antialiased;
+  font-family: var(--font-sans);
+  background-image: radial-gradient(circle at top, rgba(33, 88, 181, 0.08), transparent 36%), linear-gradient(180deg, #f8fafc 0%, #f5f7fb 100%);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.04em;
+}
+
+p,
+span,
+a,
+li,
+button,
+input,
+textarea,
+select {
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  background: rgba(166, 29, 40, 0.18);
+  color: var(--paxo-ink);
+}
+
+.hero-shell {
+  background: linear-gradient(130deg, #0f2240 0%, #163d7a 32%, #1a5bb1 62%, #0c7bb9 100%);
+}
+
+.hero-shell__grid {
+  background-image: linear-gradient(rgb(255 255 255 / 0.1) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.1) 1px, transparent 1px);
+  background-size: 54px 54px;
+  mask-image: linear-gradient(90deg, black, transparent 72%);
+}
+
+.footer-shell {
+  background-image: linear-gradient(120deg, rgb(4 27 70 / 0.97), rgb(8 40 94 / 0.95));
+}
+
+@keyframes whatsapp-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgb(37 211 102 / 0.48), 0 10px 20px rgb(15 23 42 / 0.28);
+  }
+  55% {
+    box-shadow: 0 0 0 12px rgb(37 211 102 / 0), 0 10px 20px rgb(15 23 42 / 0.28);
+  }
+}
+
+.whatsapp-pulse {
+  animation: whatsapp-pulse 2.2s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .whatsapp-pulse {
+    animation: none;
+  }
+}
+
+/* Pieza editorial del hero: foto circular, anillo rojo delgado y dos
+   acentos diagonales en las esquinas, sin invadir el círculo. */
+.hero-artwork {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 374.71 / 360.84;
+  overflow: visible;
+}
+
+.hero-artwork__image-frame {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 115%;
+  height: 115%;
+  overflow: hidden;
+  border-radius: 80%;
+  filter: drop-shadow(1.25rem 2rem 2.75rem rgb(5 28 76 / 0.5));
+}
+
+.hero-artwork__image-frame--ghost {
+  z-index: 0;
+  inset: 5% auto auto 45%;
+  width: 110%;
+  height: 110%;
+  opacity: 0.25;
+  filter: grayscale(1) contrast(0.8) drop-shadow(0.75rem 1.25rem 2rem rgb(5 28 76 / 0.28));
+}
+
+.hero-artwork__image-frame--ghost .hero-artwork__photo {
+  filter: grayscale(1) contrast(0.82);
+}
+
+.hero-artwork__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 30% center;
+  border-radius: inherit;
+  filter: saturate(1.15) contrast(1.08);
+}
+
+@media (max-width: 1023px) {
+  .hero-artwork {
+    max-width: 20rem;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
