@@ -6,7 +6,33 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@paxo/ui";
 
 const PROJECT_PHOTOS = Array.from({ length: 8 }, (_, i) => i + 1);
-const CLIENT_LOGOS = ["Cliente A", "Cliente B", "Cliente C", "Cliente D", "Cliente E"];
+
+/**
+ * Empresas clientes de PAXO.
+ *
+ * Para mostrar el logo real de una empresa, coloca el archivo en
+ * apps/web/public/clientes/ y escribe su ruta en `logo`. Formato preferido:
+ * PNG o SVG con fondo transparente, alto minimo 120 px. Mientras `logo` sea
+ * null se muestra el nombre compuesto (`destacado` + `complemento`), que
+ * mantiene la seccion presentable sin parecer un marcador de posicion.
+ */
+type Cliente = {
+  nombre: string;
+  destacado: string;
+  complemento: string | null;
+  logo: string | null;
+};
+
+const CLIENTES: Cliente[] = [
+  { nombre: "Estar Seguros", destacado: "ESTAR", complemento: "Seguros", logo: null },
+  { nombre: "Proseguros", destacado: "PROSEGUROS", complemento: null, logo: null },
+  { nombre: "Seguros Quálitas", destacado: "QUÁLITAS", complemento: "Seguros", logo: null },
+  { nombre: "QAP", destacado: "QAP", complemento: null, logo: null },
+  { nombre: "Seguros Altamira", destacado: "ALTAMIRA", complemento: "Seguros", logo: null },
+  { nombre: "Seguros Caracas", destacado: "CARACAS", complemento: "Seguros", logo: null },
+  { nombre: "Seguros Corporativos", destacado: "CORPORATIVOS", complemento: "Seguros", logo: null },
+  { nombre: "Corporación Kanata", destacado: "KANATA", complemento: "Corporación", logo: null },
+];
 
 export function Gallery() {
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -97,13 +123,38 @@ export function Gallery() {
           <div
             className="mt-7 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
           >
-            <div className="animate-marquee flex w-max items-center gap-8">
-              {[...CLIENT_LOGOS, ...CLIENT_LOGOS].map((logo, i) => (
+            <div className="animate-marquee flex w-max items-center gap-6">
+              {/* La lista va duplicada: la animacion desplaza -50%, de modo que
+                  al terminar el primer juego el segundo queda calzado y el
+                  bucle se ve continuo. aria-hidden en el duplicado evita que
+                  los lectores de pantalla lean los nombres dos veces. */}
+              {[...CLIENTES, ...CLIENTES].map((cliente, i) => (
                 <div
-                  key={`${logo}-${i}`}
-                  className="flex h-14 w-36 shrink-0 items-center justify-center rounded-xl border border-paxo-neutral-dark bg-white text-xs font-medium text-paxo-ink-light shadow-sm"
+                  key={`${cliente.nombre}-${i}`}
+                  aria-hidden={i >= CLIENTES.length}
+                  title={cliente.nombre}
+                  className="group flex h-20 w-44 shrink-0 items-center justify-center rounded-xl border border-paxo-neutral-dark bg-white px-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-paxo-blue/30 hover:shadow-card"
                 >
-                  {logo}
+                  {cliente.logo ? (
+                    <Image
+                      src={cliente.logo}
+                      alt={cliente.nombre}
+                      width={160}
+                      height={64}
+                      className="max-h-12 w-auto object-contain opacity-70 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0"
+                    />
+                  ) : (
+                    <span className="flex flex-col items-center text-center leading-none">
+                      <span className="font-display text-[0.95rem] font-black uppercase tracking-tight text-paxo-blue transition-colors duration-300 group-hover:text-paxo-blue-dark">
+                        {cliente.destacado}
+                      </span>
+                      {cliente.complemento && (
+                        <span className="mt-1 text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-paxo-ink-light">
+                          {cliente.complemento}
+                        </span>
+                      )}
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
