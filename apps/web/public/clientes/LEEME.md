@@ -5,18 +5,21 @@ en PAXO"** de la landing (carrusel en `apps/web/components/Gallery.tsx`).
 
 ## Cómo agregar un logo
 
-1. Guarda el archivo en esta carpeta, por ejemplo `qap.png`.
-2. Abre `apps/web/components/Gallery.tsx` y busca el arreglo `CLIENTES`.
-3. En la empresa correspondiente, cambia `logo: null` por la ruta y ajusta
-   `alto` según la proporción del archivo:
+1. Guarda el archivo en esta carpeta, por ejemplo `nueva-empresa.png`.
+2. Abre `apps/web/components/Gallery.tsx` y agrega una entrada al arreglo
+   `CLIENTES`, eligiendo `alto` según la proporción del archivo:
 
    ```ts
-   { nombre: "QAP", destacado: "QAP", complemento: null,
-     logo: "/clientes/qap.png", alto: "max-h-14" },
+   { nombre: "Nueva Empresa", logo: "/clientes/nueva-empresa.png", alto: "max-h-11" },
    ```
 
-Mientras `logo` sea `null` se muestra el nombre compuesto en tipografía, que
-mantiene la sección presentable.
+3. Ajusta la duración de la marquesina en `apps/web/app/globals.css`. La pista
+   mide lo que mida el conjunto de logos, así que para conservar la misma
+   velocidad hay que reajustarla: unos **5,7 segundos por logo** (seis logos →
+   34s).
+
+Toda entrada necesita su archivo de logo: el carrusel ya no tiene variante
+tipográfica de reemplazo.
 
 ### Por qué `alto` cambia según el logo
 
@@ -29,8 +32,6 @@ uniforme; se elige según el ancho dividido entre el alto del archivo:
 | Hasta 1.5 (cuadrado o vertical) | `max-h-16` | Estar Seguros, Proseguros |
 | Entre 1.5 y 3 | `max-h-11` | Seguros Altamira |
 | Más de 3 (muy apaisado) | `max-h-10` | Quálitas, Seguros Caracas |
-
-Faltan por conseguir los archivos de **QAP** y **Corporación Kanata**.
 
 ## Formato recomendado
 

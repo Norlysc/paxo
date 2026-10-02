@@ -141,10 +141,11 @@ select {
   }
 }
 
-/* Con ocho clientes la pista es mas larga que antes, asi que la duracion
-   sube para conservar un desplazamiento pausado y legible. */
+/* La duracion se escala con la cantidad de logos: la pista mide lo que mida
+   el conjunto, asi que para conservar la misma velocidad en pixeles por
+   segundo hay que reajustarla al agregar o quitar clientes. Seis logos: 34s. */
 .animate-marquee {
-  animation: marquee 45s linear infinite;
+  animation: marquee 34s linear infinite;
 }
 
 .animate-marquee:hover {

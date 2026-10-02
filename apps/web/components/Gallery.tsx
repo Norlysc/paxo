@@ -18,9 +18,7 @@ const PROJECT_PHOTOS = Array.from({ length: 8 }, (_, i) => i + 1);
  */
 type Cliente = {
   nombre: string;
-  destacado: string;
-  complemento: string | null;
-  logo: string | null;
+  logo: string;
   /**
    * Altura maxima del logo dentro de la tarjeta, como clase de Tailwind.
    * Se ajusta por marca y no de forma uniforme: a igual altura, un logo
@@ -33,21 +31,17 @@ type Cliente = {
 
 const CLIENTES: Cliente[] = [
   // Proporcion 1.08 — casi cuadrado, necesita mas altura.
-  { nombre: "Estar Seguros", destacado: "ESTAR", complemento: "Seguros", logo: "/clientes/estar-seguros.png", alto: "max-h-16" },
+  { nombre: "Estar Seguros", logo: "/clientes/estar-seguros.png", alto: "max-h-16" },
   // Proporcion 1.38 — icono sobre texto, es el mas vertical del conjunto.
-  { nombre: "Proseguros", destacado: "PROSEGUROS", complemento: null, logo: "/clientes/proseguros.png", alto: "max-h-16" },
+  { nombre: "Proseguros", logo: "/clientes/proseguros.png", alto: "max-h-16" },
   // Proporcion 3.32 — apaisado.
-  { nombre: "Seguros Quálitas", destacado: "QUÁLITAS", complemento: "Seguros", logo: "/clientes/qualitas.png", alto: "max-h-10" },
-  // Pendiente: falta el archivo del logo.
-  { nombre: "QAP", destacado: "QAP", complemento: null, logo: null, alto: "max-h-10" },
+  { nombre: "Seguros Quálitas", logo: "/clientes/qualitas.png", alto: "max-h-10" },
   // Proporcion 2.69.
-  { nombre: "Seguros Altamira", destacado: "ALTAMIRA", complemento: "Seguros", logo: "/clientes/seguros-altamira.png", alto: "max-h-11" },
+  { nombre: "Seguros Altamira", logo: "/clientes/seguros-altamira.png", alto: "max-h-11" },
   // Proporcion 3.19.
-  { nombre: "Seguros Caracas", destacado: "CARACAS", complemento: "Seguros", logo: "/clientes/seguros-caracas.png", alto: "max-h-10" },
+  { nombre: "Seguros Caracas", logo: "/clientes/seguros-caracas.png", alto: "max-h-10" },
   // Proporcion 3.74 — el mas apaisado.
-  { nombre: "Seguros Corporativos", destacado: "CORPORATIVOS", complemento: "Seguros", logo: "/clientes/seguros-corporativos.png", alto: "max-h-10" },
-  // Pendiente: falta el archivo del logo.
-  { nombre: "Corporación Kanata", destacado: "KANATA", complemento: "Corporación", logo: null, alto: "max-h-10" },
+  { nombre: "Seguros Corporativos", logo: "/clientes/seguros-corporativos.png", alto: "max-h-10" },
 ];
 
 export function Gallery() {
@@ -151,29 +145,16 @@ export function Gallery() {
                   title={cliente.nombre}
                   className="group flex h-24 w-48 shrink-0 items-center justify-center rounded-xl border border-paxo-neutral-dark bg-white px-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-paxo-blue/30 hover:shadow-card"
                 >
-                  {cliente.logo ? (
-                    <Image
-                      src={cliente.logo}
-                      alt={cliente.nombre}
-                      width={240}
-                      height={120}
-                      className={cn(
-                        "w-auto object-contain transition-transform duration-300 group-hover:scale-105",
-                        cliente.alto
-                      )}
-                    />
-                  ) : (
-                    <span className="flex flex-col items-center text-center leading-none">
-                      <span className="font-display text-[0.95rem] font-black uppercase tracking-tight text-paxo-blue transition-colors duration-300 group-hover:text-paxo-blue-dark">
-                        {cliente.destacado}
-                      </span>
-                      {cliente.complemento && (
-                        <span className="mt-1 text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-paxo-ink-light">
-                          {cliente.complemento}
-                        </span>
-                      )}
-                    </span>
-                  )}
+                  <Image
+                    src={cliente.logo}
+                    alt={cliente.nombre}
+                    width={240}
+                    height={120}
+                    className={cn(
+                      "w-auto object-contain transition-transform duration-300 group-hover:scale-105",
+                      cliente.alto
+                    )}
+                  />
                 </div>
               ))}
             </div>
