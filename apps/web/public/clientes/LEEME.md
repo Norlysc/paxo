@@ -5,17 +5,32 @@ en PAXO"** de la landing (carrusel en `apps/web/components/Gallery.tsx`).
 
 ## Cómo agregar un logo
 
-1. Guarda el archivo en esta carpeta, por ejemplo `seguros-caracas.png`.
+1. Guarda el archivo en esta carpeta, por ejemplo `qap.png`.
 2. Abre `apps/web/components/Gallery.tsx` y busca el arreglo `CLIENTES`.
-3. En la empresa correspondiente, cambia `logo: null` por la ruta:
+3. En la empresa correspondiente, cambia `logo: null` por la ruta y ajusta
+   `alto` según la proporción del archivo:
 
    ```ts
-   { nombre: "Seguros Caracas", destacado: "CARACAS", complemento: "Seguros",
-     logo: "/clientes/seguros-caracas.png" },
+   { nombre: "QAP", destacado: "QAP", complemento: null,
+     logo: "/clientes/qap.png", alto: "max-h-14" },
    ```
 
 Mientras `logo` sea `null` se muestra el nombre compuesto en tipografía, que
 mantiene la sección presentable.
+
+### Por qué `alto` cambia según el logo
+
+A igual altura, un logo apaisado ocupa el triple de ancho que uno cuadrado y
+hace que el cuadrado parezca diminuto a su lado. Por eso la altura no es
+uniforme; se elige según el ancho dividido entre el alto del archivo:
+
+| Proporción (ancho ÷ alto) | Clase `alto` | Ejemplo |
+| --- | --- | --- |
+| Hasta 1.5 (cuadrado o vertical) | `max-h-16` | Estar Seguros, Proseguros |
+| Entre 1.5 y 3 | `max-h-11` | Seguros Altamira |
+| Más de 3 (muy apaisado) | `max-h-10` | Quálitas, Seguros Caracas |
+
+Faltan por conseguir los archivos de **QAP** y **Corporación Kanata**.
 
 ## Formato recomendado
 

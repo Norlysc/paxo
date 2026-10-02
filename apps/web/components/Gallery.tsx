@@ -21,17 +21,33 @@ type Cliente = {
   destacado: string;
   complemento: string | null;
   logo: string | null;
+  /**
+   * Altura maxima del logo dentro de la tarjeta, como clase de Tailwind.
+   * Se ajusta por marca y no de forma uniforme: a igual altura, un logo
+   * apaisado ocupa el triple de ancho que uno cuadrado y lo hace parecer
+   * diminuto. Los cuadrados suben a 64 px y los alargados bajan a 40 px
+   * para que todos pesen visualmente parecido.
+   */
+  alto: string;
 };
 
 const CLIENTES: Cliente[] = [
-  { nombre: "Estar Seguros", destacado: "ESTAR", complemento: "Seguros", logo: null },
-  { nombre: "Proseguros", destacado: "PROSEGUROS", complemento: null, logo: null },
-  { nombre: "Seguros Quálitas", destacado: "QUÁLITAS", complemento: "Seguros", logo: null },
-  { nombre: "QAP", destacado: "QAP", complemento: null, logo: null },
-  { nombre: "Seguros Altamira", destacado: "ALTAMIRA", complemento: "Seguros", logo: null },
-  { nombre: "Seguros Caracas", destacado: "CARACAS", complemento: "Seguros", logo: null },
-  { nombre: "Seguros Corporativos", destacado: "CORPORATIVOS", complemento: "Seguros", logo: null },
-  { nombre: "Corporación Kanata", destacado: "KANATA", complemento: "Corporación", logo: null },
+  // Proporcion 1.08 — casi cuadrado, necesita mas altura.
+  { nombre: "Estar Seguros", destacado: "ESTAR", complemento: "Seguros", logo: "/clientes/estar-seguros.png", alto: "max-h-16" },
+  // Proporcion 1.38 — icono sobre texto, es el mas vertical del conjunto.
+  { nombre: "Proseguros", destacado: "PROSEGUROS", complemento: null, logo: "/clientes/proseguros.png", alto: "max-h-16" },
+  // Proporcion 3.32 — apaisado.
+  { nombre: "Seguros Quálitas", destacado: "QUÁLITAS", complemento: "Seguros", logo: "/clientes/qualitas.png", alto: "max-h-10" },
+  // Pendiente: falta el archivo del logo.
+  { nombre: "QAP", destacado: "QAP", complemento: null, logo: null, alto: "max-h-10" },
+  // Proporcion 2.69.
+  { nombre: "Seguros Altamira", destacado: "ALTAMIRA", complemento: "Seguros", logo: "/clientes/seguros-altamira.png", alto: "max-h-11" },
+  // Proporcion 3.19.
+  { nombre: "Seguros Caracas", destacado: "CARACAS", complemento: "Seguros", logo: "/clientes/seguros-caracas.png", alto: "max-h-10" },
+  // Proporcion 3.74 — el mas apaisado.
+  { nombre: "Seguros Corporativos", destacado: "CORPORATIVOS", complemento: "Seguros", logo: "/clientes/seguros-corporativos.png", alto: "max-h-10" },
+  // Pendiente: falta el archivo del logo.
+  { nombre: "Corporación Kanata", destacado: "KANATA", complemento: "Corporación", logo: null, alto: "max-h-10" },
 ];
 
 export function Gallery() {
@@ -133,15 +149,18 @@ export function Gallery() {
                   key={`${cliente.nombre}-${i}`}
                   aria-hidden={i >= CLIENTES.length}
                   title={cliente.nombre}
-                  className="group flex h-20 w-44 shrink-0 items-center justify-center rounded-xl border border-paxo-neutral-dark bg-white px-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-paxo-blue/30 hover:shadow-card"
+                  className="group flex h-24 w-48 shrink-0 items-center justify-center rounded-xl border border-paxo-neutral-dark bg-white px-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-paxo-blue/30 hover:shadow-card"
                 >
                   {cliente.logo ? (
                     <Image
                       src={cliente.logo}
                       alt={cliente.nombre}
-                      width={160}
-                      height={64}
-                      className="max-h-12 w-auto object-contain opacity-70 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0"
+                      width={240}
+                      height={120}
+                      className={cn(
+                        "w-auto object-contain transition-transform duration-300 group-hover:scale-105",
+                        cliente.alto
+                      )}
                     />
                   ) : (
                     <span className="flex flex-col items-center text-center leading-none">
