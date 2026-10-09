@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Button } from "@paxo/ui";
+import { Button, cn } from "@paxo/ui";
 import { COMPANY } from "@paxo/shared";
 
 const NAV_LINKS = [
   { href: "#servicios", label: "Servicios" },
-  { href: "#proyectos", label: "Proyectos" },
+  { href: "#proceso", label: "Cómo trabajamos" },
   { href: "#testimonios", label: "Testimonios" },
   { href: "#faq", label: "Preguntas" },
   { href: "#contacto", label: "Contacto" },
@@ -15,6 +15,15 @@ const NAV_LINKS = [
 
 export function Header() {
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [conScroll, setConScroll] = useState(false);
+
+  // Sombra solo al desplazarse: arriba del todo el header se funde con el hero.
+  useEffect(() => {
+    const onScroll = () => setConScroll(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Bloquea el scroll del fondo mientras el menu movil esta desplegado.
   useEffect(() => {
@@ -25,7 +34,12 @@ export function Header() {
   }, [menuAbierto]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white">
+    <header
+      className={cn(
+        "sticky top-0 z-40 border-b bg-white transition-shadow duration-300",
+        conScroll ? "border-slate-200 shadow-[0_8px_24px_-18px_rgba(15,23,42,0.45)]" : "border-transparent"
+      )}
+    >
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4 sm:px-6 lg:h-24">
         <a href="#" className="flex shrink-0 items-center" aria-label={COMPANY.legalName}>
           <Image

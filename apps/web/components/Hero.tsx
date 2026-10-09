@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@paxo/ui";
 import { HeroArtwork } from "./HeroArtwork";
 
@@ -35,7 +36,7 @@ export function Hero() {
       {/* max-w-6xl como el resto de secciones: con max-w-7xl el titular
           arrancaba 64px antes que el logo del header y no alineaban. */}
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-20 pb-40 sm:px-6 sm:py-24 sm:pb-44 lg:py-28 lg:pb-48 xl:py-32">
-        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,0.44fr)_minmax(0,0.56fr)] lg:gap-6 xl:gap-10">
+        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,0.54fr)_minmax(0,0.46fr)] lg:gap-8 xl:gap-12">
           <motion.div
             initial="hidden"
             animate="visible"
@@ -43,27 +44,35 @@ export function Hero() {
             transition={{ duration: 0.6 }}
             className="relative z-10 lg:pb-4"
           >
-            <span className="inline-flex items-center rounded-full border border-white/20 bg-white/7 px-4 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/90 shadow-lg shadow-[#081f4f]/30 backdrop-blur-sm">
+            <span className="inline-flex items-center rounded-full border border-white/20 bg-white/7 px-4 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/90 shadow-lg shadow-[#081f4f]/30 backdrop-blur-sm">
               Construcción · Mantenimiento · Seguridad Electrónica
             </span>
-            <h1 className="mt-6 max-w-xl text-4xl font-black leading-[0.96] tracking-[-0.06em] text-white sm:text-5xl lg:text-[3.35rem] xl:text-[4rem]">
-              Ingeniería y construcción con el rigor de una <span className="text-[#ffd6d9]">empresa industrial</span>
+            <h1 className="mt-6 max-w-xl text-balance text-[2.5rem] font-extrabold leading-[1.04] tracking-[-0.035em] text-white sm:text-5xl lg:text-[3.4rem] xl:text-[3.75rem]">
+              Ingeniería y construcción con el rigor de una <span className="hero-underline">empresa industrial</span>
             </h1>
             <p className="mt-5 max-w-lg text-lg leading-8 text-white/80">
               Desde obra civil hasta sistemas de seguridad electrónica: un solo equipo confiable para construir, remodelar,
               mantener y proteger tu propiedad o negocio en Venezuela.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <motion.a href="#cotizar" whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }} className="inline-block">
-                <Button size="lg" className="rounded-2xl px-7 shadow-[0_18px_35px_-20px_rgba(166,29,40,0.7)]">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <motion.a href="#cotizar" whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }} className="group block sm:inline-block">
+                <Button
+                  size="lg"
+                  className="btn-shine w-full rounded-xl px-7 shadow-[0_18px_35px_-20px_rgba(166,29,40,0.7)] group-hover:shadow-[0_22px_40px_-18px_rgba(166,29,40,0.85)]"
+                >
                   Solicitar Asesoría Personalizada
+                  <ArrowRight
+                    aria-hidden
+                    className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1.5"
+                    strokeWidth={2.25}
+                  />
                 </Button>
               </motion.a>
-              <motion.a href="#servicios" whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }} className="inline-block">
+              <motion.a href="#servicios" whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }} className="block sm:inline-block">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="rounded-2xl border-white/40 bg-white/5 text-white hover:bg-white hover:text-[#163d7a]"
+                  className="w-full rounded-xl border-white/40 bg-white/5 text-white hover:bg-white hover:text-[#163d7a]"
                 >
                   Ver Servicios
                 </Button>

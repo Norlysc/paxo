@@ -1,43 +1,39 @@
 "use client";
 
-import Image from "next/image";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { COMPANY } from "@paxo/shared";
 import { Card, CardContent } from "@paxo/ui";
 import { QuoteForm } from "./QuoteForm";
+import { SectionHeading } from "./SectionHeading";
 import { trackEvent } from "@/lib/analytics";
+import { whatsappUrl } from "@/lib/contact";
 
 export function ContactSection() {
   const phone = process.env.NEXT_PUBLIC_PHONE_NUMBER ?? COMPANY.phoneNumber;
   const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? COMPANY.email;
-  const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? COMPANY.whatsappNumber;
   const mapEmbedUrl =
     process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_URL ||
     "https://www.google.com/maps?q=Calle%20Zuloaga%2C%20Los%20Chaguaramos%2C%20Caracas%2C%20Venezuela&output=embed";
-  const whatsappMessage = encodeURIComponent("Hola, quisiera solicitar una asesoría personalizada de SOLUCIONES PAXO.");
 
   const contactIcons = [
-    { name: "WhatsApp", href: `whatsapp://send?phone=${whatsapp}&text=${whatsappMessage}`, Icon: WhatsAppIcon, event: "whatsapp_click" as const, external: false },
+    { name: "WhatsApp", href: whatsappUrl(), Icon: WhatsAppIcon, event: "whatsapp_click" as const, external: true },
     { name: "Llamar", href: `tel:${phone.replace(/\s/g, "")}`, Icon: Phone, event: "call_click" as const, external: false },
     { name: "Correo", href: `mailto:${email}`, Icon: Mail, event: "email_click" as const, external: false },
   ];
 
   return (
-    <section id="cotizar" className="relative overflow-hidden bg-paxo-blue-dark py-20 sm:py-24">
+    <section id="cotizar" className="relative scroll-mt-24 overflow-hidden bg-paxo-blue-dark py-20 sm:py-24">
       <div aria-hidden className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full border-[30px] border-white/5" />
       <div aria-hidden className="pointer-events-none absolute -bottom-48 -right-28 h-[30rem] w-[30rem] rounded-full border-[24px] border-paxo-red/20" />
       <div className="relative mx-auto grid max-w-6xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-start lg:gap-16">
         <div className="max-w-2xl">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-paxo-red">Conversemos sobre tu proyecto</p>
-          <h2 className="mt-4 flex items-center gap-3 font-display text-3xl font-bold text-white sm:text-4xl">
-            <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white p-1.5 sm:h-10 sm:w-10">
-              <Image src="/brand/logo-icon.jpg" alt="" fill sizes="40px" className="rounded-full object-contain p-1.5" />
-            </span>
-            Solicita tu Asesoría Personalizada
-          </h2>
-          <p className="mt-4 max-w-xl text-base leading-7 text-white/75">
-            Cuéntanos qué necesitas y te contactaremos en menos de 24 horas.
-          </p>
+          <SectionHeading
+            align="left"
+            tone="dark"
+            eyebrow="Conversemos sobre tu proyecto"
+            title="Solicita tu asesoría personalizada"
+            lead="Cuéntanos qué necesitas y te contactaremos en menos de 24 horas."
+          />
           <Card className="mt-8 rounded-3xl border-0 shadow-2xl shadow-[#061d46]/35">
             <CardContent className="p-5 sm:p-7">
               <QuoteForm />
@@ -48,7 +44,7 @@ export function ContactSection() {
         <div id="contacto" className="rounded-3xl border border-white/15 bg-white/[0.07] p-5 shadow-2xl shadow-[#061d46]/20 backdrop-blur-sm sm:p-7">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-paxo-red">Atención directa</p>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#ffc2c7]">Atención directa</p>
               <h3 className="mt-2 text-2xl font-bold text-white">Estamos para ayudarte</h3>
             </div>
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-paxo-blue-dark">

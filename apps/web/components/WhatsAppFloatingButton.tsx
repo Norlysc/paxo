@@ -1,17 +1,14 @@
 "use client";
 
-import { COMPANY } from "@paxo/shared";
 import { trackEvent } from "@/lib/analytics";
+import { whatsappUrl } from "@/lib/contact";
 
 export function WhatsAppFloatingButton() {
-  const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? COMPANY.whatsappNumber;
-  const message = encodeURIComponent(
-    "Hola, quisiera solicitar una asesoría personalizada de SOLUCIONES PAXO."
-  );
-
   return (
     <a
-      href={`whatsapp://send?phone=${number}&text=${message}`}
+      href={whatsappUrl()}
+      target="_blank"
+      rel="noopener noreferrer"
       onClick={() => trackEvent("whatsapp_click", { metadata: { source: "floating_button" } })}
       aria-label="Escríbenos por WhatsApp"
       className="whatsapp-pulse fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-105"

@@ -1,4 +1,10 @@
+"use client";
+
 import Image from "next/image";
+import { ChevronDown } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
+import { whatsappUrl } from "@/lib/contact";
+import { SectionHeading } from "./SectionHeading";
 
 const FAQS = [
   {
@@ -21,38 +27,49 @@ const FAQS = [
 
 export function Faq() {
   return (
-    <section id="faq" className="relative overflow-hidden bg-paxo-neutral py-20">
-      <div aria-hidden className="pointer-events-none absolute -right-32 top-12 h-80 w-80 rounded-full border-[28px] border-paxo-blue/5" />
+    <section id="faq" className="relative scroll-mt-24 overflow-hidden bg-paxo-neutral py-20 sm:py-24">
       <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
         <div>
-          <h2 className="flex items-center gap-3 font-display text-3xl font-bold text-paxo-blue sm:text-4xl">
-            <span className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full bg-white ring-1 ring-paxo-blue/10 sm:h-9 sm:w-9">
-              <Image src="/brand/logo-icon.jpg" alt="" fill sizes="36px" className="object-contain" />
-            </span>
-            Preguntas Frecuentes
-          </h2>
-          <div className="mt-8 divide-y divide-paxo-neutral-dark rounded-2xl border border-paxo-neutral-dark bg-white shadow-sm">
-            {FAQS.map((item) => (
-              <details key={item.q} className="group p-5">
-                <summary className="cursor-pointer list-none font-semibold text-paxo-ink marker:content-none">
-                  <span className="flex items-center justify-between">
-                    {item.q}
-                    <span className="ml-4 text-paxo-red transition-transform group-open:rotate-45">+</span>
+          <SectionHeading align="left" eyebrow="Preguntas frecuentes" title="Resolvemos tus dudas" />
+          <div className="mt-8 space-y-3">
+            {FAQS.map((item, i) => (
+              <details
+                key={item.q}
+                open={i === 0}
+                className="group rounded-2xl border border-slate-200 bg-white px-5 transition-colors open:border-paxo-blue/25 open:shadow-soft"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 font-semibold text-paxo-ink marker:content-none [&::-webkit-details-marker]:hidden">
+                  {item.q}
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-paxo-neutral text-paxo-blue transition-all group-open:rotate-180 group-open:bg-paxo-blue group-open:text-white">
+                    <ChevronDown className="h-4 w-4" />
                   </span>
                 </summary>
-                <p className="mt-3 text-sm text-paxo-ink-light">{item.a}</p>
+                <p className="-mt-1 pb-5 pr-12 text-sm leading-6 text-paxo-ink-light">{item.a}</p>
               </details>
             ))}
           </div>
+          <p className="mt-6 text-sm text-paxo-ink-light">
+            ¿Tienes otra pregunta?{" "}
+            <a
+              href={whatsappUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent("whatsapp_click", { metadata: { source: "faq" } })}
+              className="font-semibold text-paxo-blue underline-offset-4 hover:underline"
+            >
+              Escríbenos por WhatsApp
+            </a>
+          </p>
         </div>
 
         <div className="relative mx-auto hidden h-80 w-full max-w-sm lg:block lg:h-[29rem] lg:max-w-md">
+          <div aria-hidden className="absolute inset-x-6 bottom-0 top-16 rounded-full bg-paxo-blue/10" />
           <Image
             src="/brand/paxo-worker.png"
             alt="Profesional de SOLUCIONES PAXO C.A. disponible para responder tus preguntas"
             fill
             sizes="(max-width: 1023px) 24rem, 32rem"
-            className="object-contain object-right-bottom"
+            className="object-contain object-bottom"
           />
         </div>
       </div>

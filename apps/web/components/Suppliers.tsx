@@ -2,7 +2,7 @@
  * Franja discreta de proveedores aliados, antes del pie de pagina.
  *
  * Deliberadamente sin logos ni carrusel: esa forma esta reservada para el
- * muro de clientes de Gallery.tsx, que es el que aporta prueba social. Aqui
+ * muro de clientes de Clients.tsx, que es el que aporta prueba social. Aqui
  * el valor para el visitante no son los nombres sino lo que la red significa
  * —material disponible y plazos que se cumplen—, de ahi la linea de entrada.
  */

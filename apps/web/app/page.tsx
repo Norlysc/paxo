@@ -1,10 +1,11 @@
+import { Clients } from "@/components/Clients";
 import { ContactSection } from "@/components/ContactSection";
 import { Faq } from "@/components/Faq";
 import { Footer } from "@/components/Footer";
-import { Gallery } from "@/components/Gallery";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { PageViewTracker } from "@/components/PageViewTracker";
+import { Process } from "@/components/Process";
 import { ServicesGrid } from "@/components/ServicesGrid";
 import { Suppliers } from "@/components/Suppliers";
 import { Testimonials } from "@/components/Testimonials";
@@ -18,11 +19,12 @@ export default function HomePage() {
       <Header />
       <main>
         <Hero />
+        <Clients />
         <ServicesGrid />
-        <Gallery />
+        <WhyUsSection />
+        <Process />
         <Testimonials />
         <Faq />
-        <WhyUsSection />
         <ContactSection />
         <Suppliers />
       </main>
