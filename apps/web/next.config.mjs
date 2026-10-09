@@ -12,6 +12,9 @@ if (existsSync(rootEnvPath)) {
 const nextConfig = {
   transpilePackages: ["@paxo/ui", "@paxo/shared", "@paxo/database"],
   images: {
+    // El optimizador /_next/image no queda enrutado con "services" de Vercel (responde 404),
+    // así que las imágenes se sirven directo desde /public.
+    unoptimized: true,
     remotePatterns: [{ protocol: "https", hostname: "**.supabase.co" }],
   },
 };
