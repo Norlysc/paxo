@@ -11,9 +11,9 @@ export const runtime = "nodejs";
  * solicitud en Supabase y la envia por correo al buzon oficial de PAXO.
  *
  * El correo sale por SMTP de Gmail con una contrasena de aplicacion de la
- * propia cuenta (GMAIL_USER / GMAIL_APP_PASSWORD, solo servidor). Responde
- * con exito si al menos uno de los dos destinos recibio la solicitud, para
- * que una falla puntual de uno no le haga perder el contacto al visitante.
+ * propia cuenta (GMAIL_USER / GMAIL_APP_PASSWORD, solo servidor). La
+ * respuesta indica que se logro (saved / emailSent); si el correo no salio,
+ * el formulario lo reenvia por FormSubmit desde el navegador (ver QuoteForm).
  */
 export async function POST(request: Request) {
   let body: unknown;
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
   // Campo trampa: invisible para personas, los bots lo rellenan.
   if (typeof body === "object" && body && "website" in body && (body as { website?: string }).website) {
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ saved: true, emailSent: true });
   }
 
   const parsed = quoteRequestSchema.safeParse(body);
@@ -38,10 +38,7 @@ export async function POST(request: Request) {
   if (saved.status === "rejected") console.error("[solicitud] no se guardó en Supabase:", saved.reason);
   if (mailed.status === "rejected") console.error("[solicitud] no se envió el correo:", mailed.reason);
 
-  if (saved.status === "rejected" && mailed.status === "rejected") {
-    return NextResponse.json({ error: "No pudimos registrar tu solicitud" }, { status: 502 });
-  }
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ saved: saved.status === "fulfilled", emailSent: mailed.status === "fulfilled" });
 }
 
 async function saveToDatabase(values: QuoteRequestInput) {

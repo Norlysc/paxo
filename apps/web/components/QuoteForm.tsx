@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SERVICE_CATEGORIES, quoteRequestSchema, type QuoteRequestInput } from "@paxo/shared";
+import { COMPANY, SERVICE_CATEGORIES, quoteRequestSchema, type QuoteRequestInput } from "@paxo/shared";
 import { Button, Input, Label, Textarea } from "@paxo/ui";
 import { trackEvent } from "@/lib/analytics";
 
@@ -21,12 +21,23 @@ export function QuoteForm() {
     try {
       // La ruta guarda la solicitud y la envia por correo a PAXO.
       const website = (document.getElementById("website") as HTMLInputElement | null)?.value ?? "";
-      const res = await fetch("/api/solicitud", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...values, website }),
-      });
-      if (!res.ok) throw new Error(await res.text());
+      let result = { saved: false, emailSent: false };
+      try {
+        const res = await fetch("/api/solicitud", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...values, website }),
+        });
+        if (res.ok) result = await res.json();
+      } catch {
+        // sigue con el respaldo
+      }
+
+      // Si el servidor no pudo enviar el correo (p. ej. sin clave de Gmail
+      // configurada), se reenvia por FormSubmit para que la solicitud llegue.
+      if (!result.emailSent && !(await sendViaFormSubmit(values)) && !result.saved) {
+        throw new Error("No se pudo registrar la solicitud");
+      }
 
       await trackEvent("form_submit", { metadata: { service: values.serviceSlug } });
       setStatus("success");
@@ -109,4 +120,36 @@ export function QuoteForm() {
       </div>
     </form>
   );
+}
+
+/**
+ * Respaldo de envio por correo con FormSubmit (formsubmit.co): no requiere
+ * cuenta ni clave. La primera vez FormSubmit manda al buzon un correo de
+ * activacion; hasta que se confirme, las solicitudes no se reenvian.
+ */
+async function sendViaFormSubmit(values: QuoteRequestInput) {
+  const to = process.env.NEXT_PUBLIC_CONTACT_EMAIL || COMPANY.email;
+  const service = SERVICE_CATEGORIES.find((s) => s.slug === values.serviceSlug)?.label ?? values.serviceSlug;
+  try {
+    const res = await fetch(`https://formsubmit.co/ajax/${to}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        _subject: `Nueva solicitud de asesoría: ${service} — ${values.fullName}`,
+        _template: "table",
+        _captcha: "false",
+        ...(values.email ? { _replyto: values.email } : {}),
+        Nombre: values.fullName,
+        Teléfono: values.phone,
+        Correo: values.email || "—",
+        Servicio: service,
+        Dirección: values.address || "—",
+        "¿Qué necesita?": values.description,
+      }),
+    });
+    const data = (await res.json().catch(() => ({}))) as { success?: string | boolean };
+    return res.ok && String(data.success) === "true";
+  } catch {
+    return false;
+  }
 }
