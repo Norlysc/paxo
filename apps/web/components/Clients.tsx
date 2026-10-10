@@ -24,8 +24,8 @@ const CLIENTES: Cliente[] = [
   { nombre: "Estar Seguros", logo: "/clientes/estar-seguros.png", alto: "max-h-16" },
   // Proporcion 1.38 — icono sobre texto, es el mas vertical del conjunto.
   { nombre: "Proseguros", logo: "/clientes/proseguros.png", alto: "max-h-16" },
-  // Proporcion 3.32 — apaisado.
-  { nombre: "Seguros Quálitas", logo: "/clientes/qualitas.png", alto: "max-h-10" },
+  // Proporcion 2.16.
+  { nombre: "Seguros Qualitas", logo: "/clientes/seguros-qualitas.png", alto: "max-h-12" },
   // Proporcion 2.69.
   { nombre: "Seguros Altamira", logo: "/clientes/seguros-altamira.png", alto: "max-h-11" },
   // Proporcion 3.19.
