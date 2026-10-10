@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Award, CalendarClock, HardHat, Headset, type LucideIcon } from "lucide-react";
 import { Button } from "@paxo/ui";
+import { Reveal } from "./Reveal";
 import { SectionHeading } from "./SectionHeading";
 
 const REASONS: { title: string; text: string; Icon: LucideIcon }[] = [
@@ -12,7 +13,7 @@ const REASONS: { title: string; text: string; Icon: LucideIcon }[] = [
 
 export function WhyUsSection() {
   return (
-    <section className="bg-white py-20 sm:py-24">
+    <section className="relative bg-white py-20 sm:py-24">
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16">
         <div className="relative">
           <div className="relative h-72 overflow-hidden rounded-3xl shadow-xl ring-1 ring-slate-200 sm:h-[26rem]">
@@ -38,17 +39,22 @@ export function WhyUsSection() {
             title="Un aliado que responde por todo el proyecto"
             lead="Construcción, remodelación, mantenimiento y seguridad electrónica con un solo responsable, de principio a fin."
           />
-          <ul className="mt-8 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2">
-            {REASONS.map(({ title, text, Icon }) => (
-              <li key={title} className="flex gap-3.5">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-paxo-blue/10 text-paxo-blue">
+          <ul className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+            {REASONS.map(({ title, text, Icon }, i) => (
+              <Reveal
+                as="li"
+                key={title}
+                delay={i * 0.06}
+                className="group flex gap-3.5 rounded-2xl bg-white p-4 shadow-soft ring-1 ring-slate-200/80 transition-all duration-300 hover:-translate-y-0.5 hover:ring-paxo-blue/25"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-paxo-blue/10 text-paxo-blue transition-colors duration-300 group-hover:bg-paxo-blue group-hover:text-white">
                   <Icon className="h-5 w-5" strokeWidth={1.9} />
                 </span>
                 <div>
                   <p className="font-semibold text-paxo-ink">{title}</p>
                   <p className="mt-0.5 text-sm leading-6 text-paxo-ink-light">{text}</p>
                 </div>
-              </li>
+              </Reveal>
             ))}
           </ul>
           <a href="#cotizar" className="mt-9 inline-block">

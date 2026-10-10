@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { SERVICE_CATEGORIES, type ServiceCategorySlug } from "@paxo/shared";
 import { trackEvent } from "@/lib/analytics";
+import { Reveal } from "./Reveal";
 import { SectionHeading } from "./SectionHeading";
 
 const SERVICE_ICONS: Record<ServiceCategorySlug, LucideIcon> = {
@@ -93,26 +94,35 @@ const LABELS = Object.fromEntries(SERVICE_CATEGORIES.map((s) => [s.slug, s.label
 
 export function ServicesGrid() {
   return (
-    <section id="servicios" className="scroll-mt-24 bg-white py-20 sm:py-24">
+    <section id="servicios" className="relative scroll-mt-24 bg-gradient-to-b from-white via-paxo-neutral to-paxo-neutral py-20 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <SectionHeading
-          eyebrow="Especialidades"
-          title="Todo tu proyecto, un solo equipo"
-          lead="Dieciocho especialidades bajo un mismo techo: no tienes que coordinar contratistas por separado."
-        />
+        <Reveal>
+          <SectionHeading
+            eyebrow="Especialidades"
+            title="Todos tus proyectos, un solo equipo"
+            lead="Dieciocho especialidades bajo un mismo techo: no tienes que coordinar contratistas por separado."
+          />
+        </Reveal>
 
         <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2">
-          {SERVICE_GROUPS.map(({ title, description, Icon, slugs }) => (
-            <article
+          {SERVICE_GROUPS.map(({ title, description, Icon, slugs }, i) => (
+            <Reveal
+              as="article"
               key={title}
-              className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 transition-all duration-300 hover:border-paxo-blue/25 hover:shadow-card sm:p-7"
+              delay={(i % 2) * 0.08}
+              className="group relative flex flex-col overflow-hidden rounded-3xl bg-white p-6 shadow-card ring-1 ring-slate-200/70 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_50px_-28px_rgba(24,67,142,0.5)] sm:p-7"
             >
+              {/* Franja de marca: azul a rojo, se ensancha al pasar el cursor. */}
               <span
                 aria-hidden
-                className="absolute inset-y-0 left-0 w-1 origin-top scale-y-0 bg-paxo-red transition-transform duration-300 group-hover:scale-y-100"
+                className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-paxo-blue via-paxo-blue to-paxo-red transition-all duration-300 group-hover:h-1.5"
+              />
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-paxo-blue/[0.05]"
               />
               <div className="flex items-start gap-4">
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-paxo-blue text-white shadow-md shadow-paxo-blue/25">
+                <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-paxo-blue to-paxo-blue-dark text-white shadow-lg shadow-paxo-blue/30">
                   <Icon className="h-6 w-6" strokeWidth={1.75} />
                 </span>
                 <div>
@@ -142,7 +152,7 @@ export function ServicesGrid() {
                   );
                 })}
               </ul>
-            </article>
+            </Reveal>
           ))}
         </div>
       </div>
