@@ -56,7 +56,7 @@ export const COMPANY = {
   // Placeholders — reemplazar con datos reales de contacto de la empresa.
   whatsappNumber: "584242250106",
   phoneNumber: "0424 225 0106",
-  email: "info@solucionespaxo.com",
+  email: "solucionespaxo@gmail.com",
 } as const;
 
 export const BRAND_COLORS = {

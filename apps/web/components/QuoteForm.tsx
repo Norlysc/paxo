@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SERVICE_CATEGORIES, quoteRequestSchema, type QuoteRequestInput } from "@paxo/shared";
 import { Button, Input, Label, Textarea } from "@paxo/ui";
-import { getSupabaseBrowserClient } from "@/lib/supabase";
 import { trackEvent } from "@/lib/analytics";
 
 export function QuoteForm() {
@@ -20,16 +19,14 @@ export function QuoteForm() {
   async function onSubmit(values: QuoteRequestInput) {
     setStatus("submitting");
     try {
-      const supabase = getSupabaseBrowserClient();
-      const { error } = await supabase.from("quote_requests").insert({
-        full_name: values.fullName,
-        phone: values.phone,
-        email: values.email || null,
-        service_slug: values.serviceSlug,
-        description: values.description,
-        address: values.address || null,
+      // La ruta guarda la solicitud y la envia por correo a PAXO.
+      const website = (document.getElementById("website") as HTMLInputElement | null)?.value ?? "";
+      const res = await fetch("/api/solicitud", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...values, website }),
       });
-      if (error) throw error;
+      if (!res.ok) throw new Error(await res.text());
 
       await trackEvent("form_submit", { metadata: { service: values.serviceSlug } });
       setStatus("success");
@@ -55,6 +52,8 @@ export function QuoteForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {/* Campo trampa contra bots: oculto para personas y lectores de pantalla. */}
+      <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
       <div>
         <Label htmlFor="fullName">Nombre completo</Label>
         <Input id="fullName" placeholder="Tu nombre" {...register("fullName")} />
