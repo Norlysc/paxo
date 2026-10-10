@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { COMPANY, SERVICE_CATEGORIES, quoteRequestSchema, type QuoteRequestInput } from "@paxo/shared";
+import { SERVICE_CATEGORIES, quoteRequestSchema, type QuoteRequestInput } from "@paxo/shared";
 import { Button, Input, Label, Textarea } from "@paxo/ui";
 import { trackEvent } from "@/lib/analytics";
 
@@ -122,16 +122,19 @@ export function QuoteForm() {
   );
 }
 
+// Alias que FormSubmit asigno a solucionespaxo@gmail.com al activar el
+// formulario: evita dejar la direccion de correo a la vista en el codigo.
+const FORMSUBMIT_ID = "76e809a74a6ed305b924dafa2519b1e8";
+
 /**
  * Respaldo de envio por correo con FormSubmit (formsubmit.co): no requiere
  * cuenta ni clave. La primera vez FormSubmit manda al buzon un correo de
  * activacion; hasta que se confirme, las solicitudes no se reenvian.
  */
 async function sendViaFormSubmit(values: QuoteRequestInput) {
-  const to = process.env.NEXT_PUBLIC_CONTACT_EMAIL || COMPANY.email;
   const service = SERVICE_CATEGORIES.find((s) => s.slug === values.serviceSlug)?.label ?? values.serviceSlug;
   try {
-    const res = await fetch(`https://formsubmit.co/ajax/${to}`, {
+    const res = await fetch(`https://formsubmit.co/ajax/${FORMSUBMIT_ID}`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify({
