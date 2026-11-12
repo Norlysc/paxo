@@ -100,15 +100,16 @@ async function procesarCarpeta(carpeta, heredado = {}) {
   const antes = fotos.find((f) => /^antes\b/i.test(sinAcentos(f)));
   const despues = fotos.find((f) => /^despues\b/i.test(sinAcentos(f)));
   const base = slug(nombreCarpeta || "obra");
+  // Una carpeta con nombre de trabajo (no de categoria) es una obra: su nombre
+  // sirve de titulo para todas sus fotos.
+  const tituloCarpeta = categoriaDe(nombreCarpeta) || !nombreCarpeta ? undefined : nombreCarpeta.charAt(0).toUpperCase() + nombreCarpeta.slice(1);
+  const titulo = datos.titulo ?? tituloCarpeta;
 
   if (antes && despues) {
     const nombre = nombreUnico(base);
     const foto = await preparar(path.join(carpeta, despues), nombre);
     const fotoAntes = await preparar(path.join(carpeta, antes), `${nombre}-antes`);
     if (foto) {
-      // En un par antes/despues la carpeta es la obra: su nombre sirve de titulo,
-      // salvo que sea solo el nombre de una categoria.
-      const titulo = datos.titulo ?? (categoriaDe(nombreCarpeta) ? undefined : nombreCarpeta || undefined);
       obras.push({ id: nombre, titulo, categoria, ubicacion: datos.lugar, descripcion: datos.descripcion, foto, antes: fotoAntes ?? undefined });
     }
   }
@@ -116,8 +117,7 @@ async function procesarCarpeta(carpeta, heredado = {}) {
     if (f === antes || f === despues) continue;
     const nombre = nombreUnico(base);
     const foto = await preparar(path.join(carpeta, f), nombre);
-    // Solo la carpeta con datos.txt aporta titulo; las fotos sueltas no lo llevan.
-    if (foto) obras.push({ id: nombre, titulo: datos.titulo, categoria, ubicacion: datos.lugar, foto });
+    if (foto) obras.push({ id: nombre, titulo, categoria, ubicacion: datos.lugar, foto });
   }
   for (const e of entradas) {
     if (e.isDirectory()) await procesarCarpeta(path.join(carpeta, e.name), { categoriaId: categoria, lugar: datos.lugar });
