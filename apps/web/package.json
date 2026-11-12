@@ -16,7 +16,7 @@
     "@paxo/shared": "workspace:*",
     "@paxo/ui": "workspace:*",
     "@tanstack/react-query": "^5.64.1",
-    "embla-carousel-autoplay": "8.6.0",
+    "embla-carousel-auto-scroll": "8.6.0",
     "embla-carousel-react": "8.6.0",
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.469.0",

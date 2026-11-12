@@ -3,9 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
-import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
-import { cn } from "@paxo/ui";
+import AutoScroll from "embla-carousel-auto-scroll";
+import { ChevronLeft, ChevronRight, Expand, Pause, Play, X } from "lucide-react";
 import { GALLERY_CATEGORIES, OBRAS, type Obra } from "@/lib/gallery";
 import { SectionHeading } from "./SectionHeading";
 
@@ -13,62 +12,77 @@ const nombre = (o: Obra) =>
   o.titulo ?? (o.categoria ? `Trabajo de ${GALLERY_CATEGORIES[o.categoria].toLowerCase()} realizado por PAXO` : "Trabajo realizado por PAXO");
 
 /**
- * Galeria de obras en bucle: se arrastra con el mouse o se desliza con el
- * dedo, avanza sola despacio y se detiene en cuanto alguien interactua. La
- * foto central se ve completa; las vecinas quedan mas chicas y atenuadas.
+ * Galeria de obras como cinta continua: las fotos pasan solas sin parar y en
+ * bucle. Se puede arrastrar con el mouse o deslizar con el dedo, y la cinta
+ * retoma sola al soltar. Se detiene con el cursor encima, con el boton de
+ * pausa, mientras hay una foto ampliada y con prefers-reduced-motion.
  * Todas las tarjetas son 4:5 (las prepara scripts/preparar-fotos-obras.mjs).
  */
 export function Gallery() {
   const [reduceMotion, setReduceMotion] = useState(false);
   useEffect(() => setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches), []);
 
-  const autoplay = useRef(Autoplay({ delay: 4500, stopOnInteraction: true, stopOnMouseEnter: true }));
-  const [viewportRef, embla] = useEmblaCarousel(
-    { loop: true, align: "center", skipSnaps: false, duration: 32 },
-    reduceMotion ? [] : [autoplay.current]
+  const autoScroll = useRef(
+    AutoScroll({
+      speed: 0.9,
+      startDelay: 600,
+      stopOnInteraction: false,
+      // Solo con mouse real: en pantallas tactiles el navegador simula la
+      // entrada del cursor al tocar pero nunca su salida, y la cinta quedaba
+      // detenida para siempre despues de deslizar.
+      stopOnMouseEnter: typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches,
+      stopOnFocusIn: false,
+    })
   );
-  const [actual, setActual] = useState(0);
+  const [viewportRef, embla] = useEmblaCarousel(
+    { loop: true, align: "start", dragFree: true },
+    reduceMotion ? [] : [autoScroll.current]
+  );
+  const [pausada, setPausada] = useState(false);
   const [ampliada, setAmpliada] = useState<number | null>(null);
+  // Quieta mientras alguien recorre las fotos con el teclado. No se usa
+  // stopOnFocusIn del plugin: tras un toque la foto queda con foco y la cinta
+  // no volvia a arrancar en movil.
+  const [conTeclado, setConTeclado] = useState(false);
+
+  // La cinta solo corre si nadie la pauso y no hay una foto ampliada.
+  const detenida = pausada || ampliada !== null || conTeclado;
+  const detenidaRef = useRef(detenida);
+  detenidaRef.current = detenida;
 
   useEffect(() => {
+    const plugin = embla?.plugins().autoScroll;
+    if (!plugin) return;
+    if (detenida) plugin.stop();
+    else plugin.play();
+  }, [embla, detenida]);
+
+  // El plugin se reanuda solo tras cada toque, arrastre o salida del cursor
+  // (p. ej. al abrir una foto): si debe estar quieta, se vuelve a detener. El
+  // stop va diferido porque el plugin termina de arrancar despues de avisar.
+  useEffect(() => {
     if (!embla) return;
-    const onSelect = () => setActual(embla.selectedScrollSnap());
-    onSelect();
-    embla.on("select", onSelect).on("reInit", onSelect);
+    const alReanudar = () => {
+      if (detenidaRef.current) setTimeout(() => detenidaRef.current && embla.plugins().autoScroll?.stop(), 0);
+    };
+    embla.on("autoScroll:play", alReanudar);
     return () => {
-      embla.off("select", onSelect).off("reInit", onSelect);
+      embla.off("autoScroll:play", alReanudar);
     };
   }, [embla]);
 
-  const anterior = useCallback(() => embla?.scrollPrev(), [embla]);
-  const siguiente = useCallback(() => embla?.scrollNext(), [embla]);
-
-  // Embla ya descarta el clic que sigue a un arrastre, asi que esto solo
-  // corre con un toque real: la foto central se amplia, una lateral se centra.
-  const alTocar = (i: number) => {
-    if (i === actual) setAmpliada(i);
-    else embla?.scrollTo(i);
-  };
+  // Las flechas mueven una foto y la cinta sigue desde ahi.
+  const mover = useCallback(
+    (paso: 1 | -1) => {
+      if (!embla) return;
+      if (paso === 1) embla.scrollNext();
+      else embla.scrollPrev();
+    },
+    [embla]
+  );
 
   if (OBRAS.length === 0) return null;
   const total = OBRAS.length;
-  const pad = (n: number) => String(n).padStart(2, "0");
-
-  const controles = (
-    <div className="flex items-center gap-4">
-      <span className="text-sm font-semibold tabular-nums text-white/70" aria-live="polite">
-        <span className="text-white">{pad(actual + 1)}</span> / {pad(total)}
-      </span>
-      <div className="flex gap-2">
-        <BotonRedondo label="Foto anterior" onClick={anterior}>
-          <ChevronLeft className="h-5 w-5" />
-        </BotonRedondo>
-        <BotonRedondo label="Foto siguiente" onClick={siguiente}>
-          <ChevronRight className="h-5 w-5" />
-        </BotonRedondo>
-      </div>
-    </div>
-  );
 
   return (
     <section id="obras" className="relative scroll-mt-24 overflow-hidden bg-[#071d45] py-20 sm:py-24">
@@ -83,95 +97,72 @@ export function Gallery() {
           tone="dark"
           eyebrow="Obras realizadas"
           title="Nuestro trabajo en obra"
-          lead="Fotos reales de trabajos hechos por nuestro equipo. Desliza para ver más."
+          lead="Fotos reales de trabajos hechos por nuestro equipo. Toca una para verla en grande."
         />
-        <div className="hidden md:block">{controles}</div>
+        <div className="flex gap-2">
+          {!reduceMotion && (
+            <BotonRedondo label={pausada ? "Reanudar galería" : "Pausar galería"} onClick={() => setPausada((p) => !p)}>
+              {pausada ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+            </BotonRedondo>
+          )}
+          <BotonRedondo label="Foto anterior" onClick={() => mover(-1)}>
+            <ChevronLeft className="h-5 w-5" />
+          </BotonRedondo>
+          <BotonRedondo label="Foto siguiente" onClick={() => mover(1)}>
+            <ChevronRight className="h-5 w-5" />
+          </BotonRedondo>
+        </div>
       </div>
 
-      <div
-        className="relative mt-10 sm:mt-12"
-        role="region"
-        aria-roledescription="carrusel"
-        aria-label="Fotos de obras realizadas"
-        onKeyDown={(e) => {
-          if (e.key === "ArrowLeft") anterior();
-          if (e.key === "ArrowRight") siguiente();
-        }}
-      >
-        <div ref={viewportRef} className="cursor-grab overflow-hidden active:cursor-grabbing">
+      <div className="relative mt-10 sm:mt-12" role="region" aria-roledescription="carrusel" aria-label="Fotos de obras realizadas">
+        <div
+          ref={viewportRef}
+          onFocus={(e) => setConTeclado(e.target.matches(":focus-visible"))}
+          onBlur={() => setConTeclado(false)}
+          className="cursor-grab overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] active:cursor-grabbing"
+        >
           <div className="flex touch-pan-y">
-            {OBRAS.map((obra, i) => {
-              const activa = i === actual;
-              return (
-                <div
-                  key={obra.id}
-                  role="group"
-                  aria-roledescription="diapositiva"
-                  aria-label={`${i + 1} de ${total}`}
-                  className="min-w-0 shrink-0 grow-0 basis-[74%] px-2 sm:basis-[46%] md:basis-[36%] lg:basis-[30%] xl:basis-[27%]"
+            {OBRAS.map((obra, i) => (
+              <div
+                key={obra.id}
+                role="group"
+                aria-roledescription="diapositiva"
+                aria-label={`${i + 1} de ${total}`}
+                className="min-w-0 shrink-0 grow-0 basis-[62%] px-2 sm:basis-[38%] md:basis-[28%] lg:basis-[22%] xl:basis-[19%]"
+              >
+                <button
+                  type="button"
+                  // Embla descarta el clic que sigue a un arrastre: esto solo corre con un toque real.
+                  onClick={() => setAmpliada(i)}
+                  aria-label={`Ver en grande: ${nombre(obra)}`}
+                  className="group relative block aspect-[4/5] w-full overflow-hidden rounded-[1.5rem] bg-[#0b2a5e] shadow-[0_30px_50px_-30px_rgba(0,0,0,0.8)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/70"
                 >
-                  <button
-                    type="button"
-                    onClick={() => alTocar(i)}
-                    aria-label={activa ? `Ver en grande: ${nombre(obra)}` : `Ir a la foto ${i + 1}`}
-                    tabIndex={activa ? 0 : -1}
-                    className={cn(
-                      "group relative block aspect-[4/5] w-full overflow-hidden rounded-[1.75rem] bg-[#0b2a5e] transition-[transform,opacity,box-shadow] duration-500 ease-out",
-                      "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/70",
-                      activa
-                        ? "scale-100 opacity-100 shadow-[0_40px_70px_-30px_rgba(0,0,0,0.85)]"
-                        : "scale-[0.86] opacity-45 hover:opacity-70"
-                    )}
-                  >
-                    <Image
-                      src={obra.foto}
-                      alt={nombre(obra)}
-                      fill
-                      draggable={false}
-                      sizes="(max-width: 639px) 74vw, (max-width: 767px) 46vw, (max-width: 1023px) 36vw, 30vw"
-                      className="select-none object-cover"
-                    />
-                    <span
-                      className={cn(
-                        "pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-black/70 via-black/25 to-transparent p-4 pt-16 transition-opacity duration-500",
-                        activa ? "opacity-100" : "opacity-0"
-                      )}
-                    >
-                      {obra.categoria && (
-                        <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/25 backdrop-blur-md">
-                          {GALLERY_CATEGORIES[obra.categoria]}
-                        </span>
-                      )}
-                      <span className="ml-auto flex h-9 w-9 items-center justify-center rounded-full bg-white text-paxo-blue-dark shadow-md transition-transform duration-300 group-hover:scale-110">
-                        <Expand className="h-4 w-4" aria-hidden />
+                  <Image
+                    src={obra.foto}
+                    alt={nombre(obra)}
+                    fill
+                    draggable={false}
+                    sizes="(max-width: 639px) 62vw, (max-width: 767px) 38vw, (max-width: 1023px) 28vw, 22vw"
+                    className="select-none object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                  <span className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-black/65 via-black/20 to-transparent p-3 pt-14 sm:p-4 sm:pt-16">
+                    {obra.categoria && (
+                      <span className="rounded-full bg-white/15 px-2.5 py-1 text-[0.7rem] font-semibold text-white ring-1 ring-white/25 backdrop-blur-md sm:text-xs">
+                        {GALLERY_CATEGORIES[obra.categoria]}
                       </span>
+                    )}
+                    <span className="ml-auto flex h-8 w-8 scale-75 items-center justify-center rounded-full bg-white text-paxo-blue-dark opacity-0 shadow-md transition-all duration-300 group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100">
+                      <Expand className="h-4 w-4" aria-hidden />
                     </span>
-                  </button>
-                </div>
-              );
-            })}
+                  </span>
+                </button>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      <div className="relative mx-auto mt-8 max-w-6xl px-4 sm:px-6">
-        {/* Avance: la barra roja recorre el total de fotos. */}
-        <div className="h-1 overflow-hidden rounded-full bg-white/10">
-          <div
-            className="h-full rounded-full bg-paxo-red transition-[width] duration-500 ease-out"
-            style={{ width: `${((actual + 1) / total) * 100}%` }}
-          />
-        </div>
-        <div className="mt-6 flex justify-center md:hidden">{controles}</div>
-      </div>
-
-      <VistaAmpliada
-        indice={ampliada}
-        onCambiar={(i) => {
-          setAmpliada(i);
-          if (i !== null) embla?.scrollTo(i, true);
-        }}
-      />
+      <VistaAmpliada indice={ampliada} onCambiar={setAmpliada} />
     </section>
   );
 }
