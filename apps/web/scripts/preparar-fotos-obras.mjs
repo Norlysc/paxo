@@ -2,16 +2,20 @@
 //
 //   node scripts/preparar-fotos-obras.mjs [carpeta-origen]
 //
-// Origen por defecto: Escritorio\Fotos-Obras-PAXO. Las fotos pueden ir sueltas
-// o en subcarpetas; si el nombre de la subcarpeta contiene "construc",
-// "instala", "acabad" o "segur", las fotos toman esa categoria. Un archivo
-// datos.txt en la subcarpeta (Titulo:, Categoria:, Lugar:, Descripcion:) se
-// aplica a sus fotos. Dentro de una subcarpeta, un par antes.* / despues.*
-// se publica como una sola obra con comparador.
+// Origen por defecto: Escritorio\Fotos-Obras-PAXO. Toma todas las fotos (en la
+// raiz o en subcarpetas) y, si existe, aplica clasificacion.json de esa misma
+// carpeta:
+//   { "categorias": { "foto.jpg": "acabados" }, "omitir": [...], "primero": [...] }
+// Sin clasificacion, la categoria sale del nombre de la subcarpeta
+// ("Instalaciones", "Acabados"...).
 //
-// Como son fotos de telefono, cada una se endereza segun su EXIF, se reduce a
-// 1600 px, recibe un ajuste suave de luz, color y nitidez, y se guarda en WebP
-// en public/obras/. Al final reescribe lib/obras.generated.ts.
+// Son fotos de telefono de distintos tamanos y orientaciones. De cada una se
+// generan dos WebP en public/obras/:
+//   <id>.webp       tarjeta 4:5 (960x1200), recorte inteligente hacia la zona
+//                   con mas detalle: todas las tarjetas quedan del mismo tamano
+//   <id>-full.webp  foto completa sin recortar (max 1600 px) para la vista ampliada
+// con enderezado por EXIF y un ajuste suave de luz, color y nitidez. Al final
+// reescribe lib/obras.generated.ts.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -26,49 +30,63 @@ const ORIGEN = path.resolve(process.argv[2] ?? path.join(os.homedir(), "Desktop"
 const DESTINO = path.join(WEB, "public", "obras");
 const SALIDA = path.join(WEB, "lib", "obras.generated.ts");
 const EXT = /\.(jpe?g|png|webp|heic|heif)$/i;
+const CATEGORIAS = ["construccion", "instalaciones", "acabados", "seguridad"];
 
 const sinAcentos = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-const slug = (s) => sinAcentos(s).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "obra";
 
-function categoriaDe(texto) {
-  const t = sinAcentos(texto ?? "");
-  if (t.includes("construc") || t.includes("obra civil")) return "construccion";
-  if (t.includes("instala") || t.includes("electric") || t.includes("plomer") || t.includes("aire")) return "instalaciones";
-  if (t.includes("acabad") || t.includes("carpinter") || t.includes("pintur") || t.includes("herrer")) return "acabados";
-  if (t.includes("segur") || t.includes("cctv") || t.includes("camara")) return "seguridad";
+function categoriaDeCarpeta(nombre) {
+  const t = sinAcentos(nombre);
+  if (t.includes("construc")) return "construccion";
+  if (t.includes("instala")) return "instalaciones";
+  if (t.includes("acabad")) return "acabados";
+  if (t.includes("segur")) return "seguridad";
   return undefined;
 }
 
-function leerDatos(carpeta) {
-  const f = path.join(carpeta, "datos.txt");
-  if (!fs.existsSync(f)) return {};
-  const datos = {};
-  for (const linea of fs.readFileSync(f, "utf8").split(/\r?\n/)) {
-    const m = linea.match(/^\s*(titulo|título|categoria|categoría|lugar|descripcion|descripción)\s*:\s*(.+)$/i);
-    if (m) datos[sinAcentos(m[1])] = m[2].trim();
-  }
-  return datos;
+function leerClasificacion() {
+  const f = path.join(ORIGEN, "clasificacion.json");
+  if (!fs.existsSync(f)) return { categorias: {}, omitir: [], primero: [] };
+  const c = JSON.parse(fs.readFileSync(f, "utf8"));
+  return { categorias: c.categorias ?? {}, omitir: c.omitir ?? [], primero: c.primero ?? [] };
 }
+
+/** Lista recursiva de fotos con la categoria de su subcarpeta. */
+function listarFotos(carpeta, categoriaCarpeta) {
+  const fotos = [];
+  for (const e of fs.readdirSync(carpeta, { withFileTypes: true })) {
+    const ruta = path.join(carpeta, e.name);
+    if (e.isDirectory()) {
+      if (sinAcentos(e.name).replace(/^\d+\s*-\s*/, "").startsWith("ejemplo")) continue;
+      fotos.push(...listarFotos(ruta, categoriaDeCarpeta(e.name) ?? categoriaCarpeta));
+    } else if (EXT.test(e.name)) {
+      fotos.push({ ruta, archivo: e.name, categoria: categoriaCarpeta });
+    }
+  }
+  return fotos;
+}
+
+const ajustar = (img) =>
+  img
+    .modulate({ brightness: 1.04, saturation: 1.08 })
+    .linear(1.06, -6) // un poco mas de contraste
+    .sharpen({ sigma: 0.7 });
 
 const omitidas = [];
 
-/** Devuelve la ruta publica, o null si la foto no se pudo leer (p. ej. HEIC). */
-async function preparar(origen, nombre) {
-  const destino = path.join(DESTINO, `${nombre}.webp`);
+async function preparar(ruta, id) {
   try {
-    await sharp(origen, { failOn: "none" })
-    .rotate() // endereza segun la orientacion EXIF del telefono
-    .resize({ width: 1600, height: 1600, fit: "inside", withoutEnlargement: true })
-    .modulate({ brightness: 1.04, saturation: 1.08 })
-    .linear(1.06, -6) // un poco mas de contraste
-    .sharpen({ sigma: 0.7 })
-    .webp({ quality: 80, effort: 5 })
-    .toFile(destino);
+    const enderezada = await sharp(ruta, { failOn: "none" }).rotate().toBuffer(); // endereza segun EXIF
+    await ajustar(sharp(enderezada).resize(960, 1200, { fit: "cover", position: sharp.strategy.attention }))
+      .webp({ quality: 78, effort: 5 })
+      .toFile(path.join(DESTINO, `${id}.webp`));
+    await ajustar(sharp(enderezada).resize({ width: 1600, height: 1600, fit: "inside", withoutEnlargement: true }))
+      .webp({ quality: 80, effort: 5 })
+      .toFile(path.join(DESTINO, `${id}-full.webp`));
+    return true;
   } catch (err) {
-    omitidas.push(`${path.relative(ORIGEN, origen)} (${err.message.split("\n")[0]})`);
-    return null;
+    omitidas.push(`${path.relative(ORIGEN, ruta)} (${err.message.split("\n")[0]})`);
+    return false;
   }
-  return `/obras/${nombre}.webp`;
 }
 
 if (!fs.existsSync(ORIGEN)) {
@@ -78,58 +96,39 @@ if (!fs.existsSync(ORIGEN)) {
 fs.rmSync(DESTINO, { recursive: true, force: true });
 fs.mkdirSync(DESTINO, { recursive: true });
 
+const clasif = leerClasificacion();
+const fotos = listarFotos(ORIGEN)
+  .filter((f) => !clasif.omitir.includes(f.archivo))
+  .map((f) => {
+    const c = clasif.categorias[f.archivo];
+    return { ...f, categoria: CATEGORIAS.includes(c) ? c : f.categoria };
+  })
+  .sort((a, b) => a.archivo.localeCompare(b.archivo, "es", { numeric: true }));
+
+// Orden: primero las elegidas; el resto se intercala por categoria para que
+// no queden seguidas muchas fotos del mismo tipo de trabajo.
+const primero = clasif.primero.map((n) => fotos.find((f) => f.archivo === n)).filter(Boolean);
+const resto = fotos.filter((f) => !primero.includes(f));
+const grupos = new Map();
+for (const f of resto) {
+  const k = f.categoria ?? "otras";
+  if (!grupos.has(k)) grupos.set(k, []);
+  grupos.get(k).push(f);
+}
+const intercaladas = [];
+while ([...grupos.values()].some((g) => g.length)) {
+  for (const g of grupos.values()) if (g.length) intercaladas.push(g.shift());
+}
+
 const obras = [];
-const usados = new Set();
-const nombreUnico = (base) => {
-  let n = base, i = 2;
-  while (usados.has(n)) n = `${base}-${i++}`;
-  usados.add(n);
-  return n;
-};
-
-async function procesarCarpeta(carpeta, heredado = {}) {
-  const entradas = fs.readdirSync(carpeta, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name, "es", { numeric: true }));
-  const esRaiz = carpeta === ORIGEN;
-  const datos = { ...heredado, ...leerDatos(carpeta) };
-  const nombreCarpeta = esRaiz ? "" : path.basename(carpeta).replace(/^\d+\s*-\s*/, "");
-  // Las carpetas de ejemplo se ignoran.
-  if (!esRaiz && sinAcentos(nombreCarpeta).startsWith("ejemplo")) return;
-  const categoria = categoriaDe(datos.categoria) ?? categoriaDe(nombreCarpeta) ?? heredado.categoriaId;
-
-  const fotos = entradas.filter((e) => e.isFile() && EXT.test(e.name)).map((e) => e.name);
-  const antes = fotos.find((f) => /^antes\b/i.test(sinAcentos(f)));
-  const despues = fotos.find((f) => /^despues\b/i.test(sinAcentos(f)));
-  const base = slug(nombreCarpeta || "obra");
-  // Una carpeta con nombre de trabajo (no de categoria) es una obra: su nombre
-  // sirve de titulo para todas sus fotos.
-  const tituloCarpeta = categoriaDe(nombreCarpeta) || !nombreCarpeta ? undefined : nombreCarpeta.charAt(0).toUpperCase() + nombreCarpeta.slice(1);
-  const titulo = datos.titulo ?? tituloCarpeta;
-
-  if (antes && despues) {
-    const nombre = nombreUnico(base);
-    const foto = await preparar(path.join(carpeta, despues), nombre);
-    const fotoAntes = await preparar(path.join(carpeta, antes), `${nombre}-antes`);
-    if (foto) {
-      obras.push({ id: nombre, titulo, categoria, ubicacion: datos.lugar, descripcion: datos.descripcion, foto, antes: fotoAntes ?? undefined });
-    }
-  }
-  for (const f of fotos) {
-    if (f === antes || f === despues) continue;
-    const nombre = nombreUnico(base);
-    const foto = await preparar(path.join(carpeta, f), nombre);
-    if (foto) obras.push({ id: nombre, titulo, categoria, ubicacion: datos.lugar, foto });
-  }
-  for (const e of entradas) {
-    if (e.isDirectory()) await procesarCarpeta(path.join(carpeta, e.name), { categoriaId: categoria, lugar: datos.lugar });
+for (const [i, f] of [...primero, ...intercaladas].entries()) {
+  const id = `obra-${String(i + 1).padStart(2, "0")}`;
+  if (await preparar(f.ruta, id)) {
+    obras.push({ id, categoria: f.categoria, foto: `/obras/${id}.webp`, fotoGrande: `/obras/${id}-full.webp` });
   }
 }
 
-await procesarCarpeta(ORIGEN);
-
-// Las obras con antes/despues van primero: son las que mejor cuentan el trabajo.
-obras.sort((a, b) => Number(Boolean(b.antes)) - Number(Boolean(a.antes)));
-
-const limpio = obras.map((o) => Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined && v !== "")));
+const limpio = obras.map((o) => Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined)));
 fs.writeFileSync(
   SALIDA,
   `// Generado por scripts/preparar-fotos-obras.mjs — no editar a mano: vuelve a\n` +
@@ -140,4 +139,6 @@ fs.writeFileSync(
 
 const peso = fs.readdirSync(DESTINO).reduce((t, f) => t + fs.statSync(path.join(DESTINO, f)).size, 0);
 if (omitidas.length) console.warn(`No se pudieron leer ${omitidas.length} fotos:\n  ${omitidas.join("\n  ")}`);
-console.log(`${obras.length} obras (${obras.filter((o) => o.antes).length} con antes/despues), ${fs.readdirSync(DESTINO).length} archivos, ${(peso / 1024 / 1024).toFixed(1)} MB en total.`);
+console.log(
+  `${obras.length} fotos publicadas (${clasif.omitir.length} omitidas a proposito), ${(peso / 1024 / 1024).toFixed(1)} MB en total.`
+);

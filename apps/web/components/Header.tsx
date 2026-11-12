@@ -7,6 +7,7 @@ import { COMPANY } from "@paxo/shared";
 
 const NAV_LINKS = [
   { href: "#servicios", label: "Servicios" },
+  { href: "#obras", label: "Obras" },
   { href: "#proceso", label: "Cómo trabajamos" },
   { href: "#testimonios", label: "Testimonios" },
   { href: "#faq", label: "Preguntas" },

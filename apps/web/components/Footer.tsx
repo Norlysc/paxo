@@ -20,6 +20,7 @@ const SERVICE_LINKS = [
 
 const NAV_LINKS = [
   { href: "#servicios", label: "Servicios" },
+  { href: "#obras", label: "Obras realizadas" },
   { href: "#proceso", label: "Cómo trabajamos" },
   { href: "#testimonios", label: "Testimonios" },
   { href: "#faq", label: "Preguntas frecuentes" },
