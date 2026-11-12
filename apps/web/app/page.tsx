@@ -2,6 +2,7 @@ import { Clients } from "@/components/Clients";
 import { ContactSection } from "@/components/ContactSection";
 import { Faq } from "@/components/Faq";
 import { Footer } from "@/components/Footer";
+import { Gallery } from "@/components/Gallery";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { PageViewTracker } from "@/components/PageViewTracker";
@@ -23,6 +24,7 @@ export default function HomePage() {
         <ServicesGrid />
         <WhyUsSection />
         <Process />
+        <Gallery />
         <Testimonials />
         <Faq />
         <ContactSection />
