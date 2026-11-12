@@ -7,6 +7,12 @@ import { cn } from "@paxo/ui";
 import { GALLERY_CATEGORIES, OBRAS, type GalleryCategory, type Obra } from "@/lib/gallery";
 import { SectionHeading } from "./SectionHeading";
 
+/** Nombre para lectores de pantalla cuando la foto no trae titulo. */
+const nombre = (o: Obra) => o.titulo ?? (o.categoria ? `Trabajo de ${CATEGORY_LABEL[o.categoria].toLowerCase()}` : "Trabajo realizado por PAXO");
+
+/** Fotos visibles antes de pulsar "Ver más fotos" (la destacada cuenta como una). */
+const INICIAL = 9;
+
 const CATEGORY_LABEL = Object.fromEntries(GALLERY_CATEGORIES.map((c) => [c.id, c.label])) as Record<GalleryCategory, string>;
 
 /**
@@ -20,6 +26,7 @@ export function Gallery() {
 
   const categorias = useMemo(() => GALLERY_CATEGORIES.filter((c) => OBRAS.some((o) => o.categoria === c.id)), []);
   const visibles = useMemo(() => (filtro === "todas" ? OBRAS : OBRAS.filter((o) => o.categoria === filtro)), [filtro]);
+  const [mostrar, setMostrar] = useState(INICIAL);
   // La destacada es la primera con "antes": es la que mejor cuenta el trabajo.
   const destacada = useMemo(() => {
     const i = visibles.findIndex((o) => o.antes);
@@ -36,7 +43,7 @@ export function Gallery() {
         <SectionHeading
           eyebrow="Proyectos"
           title="Nuestras obras"
-          lead="Trabajos ejecutados por nuestro equipo. Toca una foto para verla en grande."
+          lead="Fotos reales de trabajos hechos por nuestro equipo. Toca una para verla en grande."
         />
 
         {categorias.length > 1 && (
@@ -46,7 +53,10 @@ export function Gallery() {
                 key={c.id}
                 type="button"
                 aria-pressed={filtro === c.id}
-                onClick={() => setFiltro(c.id)}
+                onClick={() => {
+                  setFiltro(c.id);
+                  setMostrar(INICIAL);
+                }}
                 className={cn(
                   "rounded-full px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paxo-blue focus-visible:ring-offset-2",
                   filtro === c.id
@@ -61,7 +71,7 @@ export function Gallery() {
         )}
 
         <div className="mt-8 grid auto-rows-[10.5rem] grid-cols-2 gap-3 sm:auto-rows-[12rem] md:grid-cols-4 md:gap-4 lg:auto-rows-[13.5rem]">
-          {orden.map((obra, i) =>
+          {orden.slice(0, mostrar).map((obra, i) =>
             i === 0 ? (
               <ObraDestacada key={obra.id} obra={obra} onAbrir={() => setAbierta(OBRAS.indexOf(obra))} />
             ) : (
@@ -73,7 +83,7 @@ export function Gallery() {
               >
                 <Image
                   src={obra.foto}
-                  alt={obra.titulo}
+                  alt={nombre(obra)}
                   fill
                   sizes="(max-width: 767px) 50vw, 25vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -83,6 +93,18 @@ export function Gallery() {
             )
           )}
         </div>
+
+        {orden.length > mostrar && (
+          <div className="mt-8 text-center">
+            <button
+              type="button"
+              onClick={() => setMostrar((n) => n + 8)}
+              className="rounded-full bg-paxo-neutral px-6 py-3 text-sm font-semibold text-paxo-blue-dark ring-1 ring-slate-200 transition-colors hover:bg-paxo-blue-dark hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paxo-blue focus-visible:ring-offset-2"
+            >
+              Ver más fotos ({orden.length - mostrar})
+            </button>
+          </div>
+        )}
       </div>
 
       <VistaAmpliada indice={abierta} onCambiar={setAbierta} />
@@ -91,11 +113,14 @@ export function Gallery() {
 }
 
 function Pie({ obra, grande = false }: { obra: Obra; grande?: boolean }) {
+  if (!obra.titulo && !obra.ubicacion && !(obra.antes && !grande)) return null;
   return (
     <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#071d45]/90 via-[#071d45]/45 to-transparent p-3 pt-10 sm:p-4 sm:pt-12">
-      <span className={cn("block font-bold leading-snug text-white", grande ? "text-lg sm:text-xl" : "text-sm sm:text-base")}>
-        {obra.titulo}
-      </span>
+      {obra.titulo && (
+        <span className={cn("block font-bold leading-snug text-white", grande ? "text-lg sm:text-xl" : "text-sm sm:text-base")}>
+          {obra.titulo}
+        </span>
+      )}
       {obra.ubicacion && (
         <span className="mt-0.5 flex items-center gap-1 text-xs text-white/75">
           <MapPin className="h-3 w-3" aria-hidden />
@@ -116,17 +141,17 @@ function ObraDestacada({ obra, onAbrir }: { obra: Obra; onAbrir: () => void }) {
   return (
     <div className="relative col-span-2 row-span-2 overflow-hidden rounded-3xl bg-slate-200 shadow-card">
       {obra.antes ? (
-        <Comparador antes={obra.antes} despues={obra.foto} titulo={obra.titulo} />
+        <Comparador antes={obra.antes} despues={obra.foto} titulo={nombre(obra)} />
       ) : (
-        <button type="button" onClick={onAbrir} className="group absolute inset-0" aria-label={`Ver ${obra.titulo} en grande`}>
-          <Image src={obra.foto} alt={obra.titulo} fill sizes="(max-width: 767px) 100vw, 50vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+        <button type="button" onClick={onAbrir} className="group absolute inset-0" aria-label={`Ver en grande: ${nombre(obra)}`}>
+          <Image src={obra.foto} alt={nombre(obra)} fill sizes="(max-width: 767px) 100vw, 50vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
         </button>
       )}
       <Pie obra={obra} grande />
       <button
         type="button"
         onClick={onAbrir}
-        aria-label={`Ver ${obra.titulo} en grande`}
+        aria-label={`Ver en grande: ${nombre(obra)}`}
         className="absolute right-3 top-3 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-paxo-blue-dark shadow-md transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paxo-blue"
       >
         <Expand className="h-4 w-4" />
@@ -200,22 +225,22 @@ function VistaAmpliada({ indice, onCambiar }: { indice: number | null; onCambiar
         if (e.key === "ArrowRight") mover(1);
         if (e.key === "ArrowLeft") mover(-1);
       }}
-      aria-label={obra ? obra.titulo : "Obra"}
+      aria-label={obra ? nombre(obra) : "Foto"}
       className="m-auto w-[min(64rem,calc(100vw-1.5rem))] max-w-none overflow-visible bg-transparent p-0 backdrop:bg-[#030d22]/85 backdrop:backdrop-blur-sm"
     >
       {obra && (
         <div className="relative overflow-hidden rounded-2xl bg-[#071d45] text-white shadow-2xl">
           <div className="relative aspect-[4/3] max-h-[70vh] w-full bg-black">
             {obra.antes ? (
-              <Comparador key={obra.id} antes={obra.antes} despues={obra.foto} titulo={obra.titulo} contain />
+              <Comparador key={obra.id} antes={obra.antes} despues={obra.foto} titulo={nombre(obra)} contain />
             ) : (
-              <Image src={obra.foto} alt={obra.titulo} fill sizes="100vw" className="object-contain" />
+              <Image src={obra.foto} alt={nombre(obra)} fill sizes="100vw" className="object-contain" />
             )}
           </div>
           <div className="flex items-start justify-between gap-4 p-4 sm:p-5">
             <div>
-              <p className="text-xs font-semibold text-[#ffc2c7]">{CATEGORY_LABEL[obra.categoria]}</p>
-              <h3 className="mt-1 text-lg font-bold sm:text-xl">{obra.titulo}</h3>
+              {obra.categoria && <p className="text-xs font-semibold text-[#ffc2c7]">{CATEGORY_LABEL[obra.categoria]}</p>}
+              <h3 className="mt-1 text-lg font-bold sm:text-xl">{obra.titulo ?? "Trabajo realizado por PAXO"}</h3>
               {obra.ubicacion && (
                 <p className="mt-1 flex items-center gap-1 text-sm text-white/70">
                   <MapPin className="h-3.5 w-3.5" aria-hidden />
