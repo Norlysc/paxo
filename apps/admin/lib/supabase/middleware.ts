@@ -19,8 +19,12 @@ export function isPublicPath(pathname: string) {
 export async function updateSession(request: NextRequest) {
   const response = NextResponse.next({ request });
 
+  // Sin configuracion no hay forma de validar la sesion: se bloquea en vez de
+  // dejar pasar, para que un despliegue mal configurado no quede abierto.
   if (!hasSupabaseConfig()) {
-    return response;
+    return isPublicPath(request.nextUrl.pathname)
+      ? response
+      : new NextResponse("Panel no configurado: faltan las variables de Supabase.", { status: 503 });
   }
 
   const supabase = createServerClient<Database>(
