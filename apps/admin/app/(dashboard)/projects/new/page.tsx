@@ -10,7 +10,7 @@ export default async function NewProjectPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-paxo-blue">Nuevo proyecto</h1>
+        <h1 className="text-2xl font-extrabold text-paxo-ink sm:text-[1.75rem]">Nuevo proyecto</h1>
         <p className="text-sm text-paxo-ink-light">Registra un proyecto asociado a un cliente.</p>
       </div>
       <ProjectForm clients={clients ?? []} />

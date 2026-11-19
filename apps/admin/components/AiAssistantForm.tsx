@@ -66,7 +66,7 @@ export function AiAssistantForm() {
             </button>
           ))}
         </div>
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" variant="secondary" disabled={isSubmitting}>
           {isSubmitting ? "Analizando..." : "Preguntar"}
         </Button>
       </form>

@@ -73,7 +73,7 @@ export function ClientForm() {
         <Input id="source" placeholder="Referido, redes sociales, web..." {...register("source")} />
       </div>
       {serverError && <p className="text-sm text-paxo-red">{serverError}</p>}
-      <Button type="submit" disabled={isSubmitting}>
+      <Button type="submit" variant="secondary" disabled={isSubmitting}>
         {isSubmitting ? "Guardando..." : "Crear cliente"}
       </Button>
     </form>

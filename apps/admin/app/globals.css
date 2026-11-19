@@ -3,38 +3,37 @@
 @tailwind utilities;
 
 :root {
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-display: var(--font-inter), system-ui, sans-serif;
-  --paxo-blue: #2158b5;
-  --paxo-blue-dark: #18438e;
-  --paxo-red: #a61d28;
-  --paxo-red-dark: #7f151d;
-  --paxo-neutral: #f5f7fa;
-  --paxo-neutral-dark: #dfe5ec;
-  --paxo-ink: #111827;
-  --paxo-ink-light: #4b5563;
-}
-
-html {
-  scroll-behavior: smooth;
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+  --font-display: var(--font-manrope), system-ui, sans-serif;
 }
 
 body {
-  @apply bg-[#f3f6fb] text-paxo-ink antialiased;
+  @apply bg-paxo-neutral text-paxo-ink antialiased;
   font-family: var(--font-sans);
-  background-image: radial-gradient(circle at top left, rgba(33, 88, 181, 0.08), transparent 28%);
+  font-feature-settings: "tnum" 0;
 }
 
 h1,
 h2,
 h3,
-h4,
-h5,
-h6 {
+h4 {
   font-family: var(--font-display);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
+}
+
+/* Las cifras se alinean en columnas: ningun numero "baila" al cambiar. */
+.tabular-nums,
+td,
+.cifra {
+  font-variant-numeric: tabular-nums;
 }
 
 ::selection {
-  background: rgba(33, 88, 181, 0.15);
+  background: rgba(33, 80, 162, 0.16);
+}
+
+/* Patron de hexagonos de la marca, para fondos navy. */
+.hex-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 0l28 16.2v32.4L28 64.8 0 48.6V16.2zM28 64.8l28 16.2v32.4M28 64.8L0 81v32.4' fill='none' stroke='%23ffffff' stroke-opacity='.06' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 56px 97px;
 }

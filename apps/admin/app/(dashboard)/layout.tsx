@@ -1,6 +1,6 @@
 import { requireStaff } from "@/lib/auth";
 import { ROLE_LABELS } from "@/lib/roles";
-import { Sidebar } from "@/components/Sidebar";
+import { MobileNav, Sidebar } from "@/components/Sidebar";
 import { Topbar } from "@/components/Topbar";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -9,9 +9,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div className="flex min-h-screen">
       <Sidebar role={staff.role} />
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
         <Topbar fullName={staff.fullName} roleLabel={ROLE_LABELS[staff.role]} />
-        <main className="flex-1 bg-paxo-neutral p-6">{children}</main>
+        <MobileNav role={staff.role} />
+        <main className="mx-auto w-full max-w-[1400px] flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
     </div>
   );

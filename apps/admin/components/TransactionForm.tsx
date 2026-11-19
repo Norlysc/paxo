@@ -69,7 +69,7 @@ export function TransactionForm() {
         <Input id="date" type="date" {...register("date")} />
       </div>
       <div className="sm:col-span-1">
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
+        <Button type="submit" variant="secondary" className="w-full" disabled={isSubmitting}>
           {isSubmitting ? "Guardando..." : "Registrar"}
         </Button>
       </div>

@@ -32,7 +32,7 @@ export function ClientNoteForm({ clientId }: { clientId: string }) {
         value={note}
         onChange={(e) => setNote(e.target.value)}
       />
-      <Button type="submit" size="sm" disabled={isSubmitting || !note.trim()}>
+      <Button type="submit" variant="secondary" size="sm" disabled={isSubmitting || !note.trim()}>
         {isSubmitting ? "Guardando..." : "Agregar nota"}
       </Button>
     </form>

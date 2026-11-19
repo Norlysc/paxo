@@ -1,42 +1,84 @@
 "use client";
 
-import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { formatCurrency } from "@/lib/format";
+import { CHART_GRID, CHART_INK, ChartCard, ChartTooltip } from "./ChartCard";
+
+const AZUL = "#2150A2";
+const ROJO = "#BF1F2E";
+
+function abreviar(v: number) {
+  if (Math.abs(v) >= 1000) return `$${(v / 1000).toFixed(v % 1000 === 0 ? 0 : 1)}k`;
+  return `$${v}`;
+}
 
 export function RevenueTrendChart({ data }: { data: { month: string; ingresos: number; gastos: number }[] }) {
+  const leyenda = (
+    <div className="flex items-center gap-4 text-xs font-semibold text-paxo-ink-light">
+      <span className="flex items-center gap-1.5">
+        <span className="h-2.5 w-2.5 rounded-full" style={{ background: AZUL }} /> Ingresos
+      </span>
+      <span className="flex items-center gap-1.5">
+        <span className="h-2.5 w-2.5 rounded-full" style={{ background: ROJO }} /> Gastos
+      </span>
+    </div>
+  );
+
   return (
-    <div className="rounded-2xl border border-paxo-neutral-dark bg-white p-5 shadow-sm">
-      <p className="font-display text-base font-semibold text-paxo-ink">Ingresos vs. gastos</p>
-      <p className="text-xs text-paxo-ink-light">Últimos 6 meses</p>
-      <div className="mt-4 h-64">
+    <ChartCard title="Ingresos y gastos" subtitle="Últimos 6 meses" aside={leyenda}>
+      <div className="mt-6 h-72">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ left: -16, right: 8, top: 8, bottom: 0 }}>
+          <AreaChart data={data} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
             <defs>
-              <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#2158B5" stopOpacity={0.35} />
-                <stop offset="95%" stopColor="#2158B5" stopOpacity={0} />
+              <linearGradient id="relleno-ingresos" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={AZUL} stopOpacity={0.22} />
+                <stop offset="100%" stopColor={AZUL} stopOpacity={0} />
               </linearGradient>
-              <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#D32F2F" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#D32F2F" stopOpacity={0} />
+              <linearGradient id="relleno-gastos" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={ROJO} stopOpacity={0.12} />
+                <stop offset="100%" stopColor={ROJO} stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#D9DEE5" vertical={false} />
-            <XAxis dataKey="month" tick={{ fontSize: 12, fill: "#4B5563" }} axisLine={false} tickLine={false} />
-            <YAxis
-              tick={{ fontSize: 12, fill: "#4B5563" }}
+            <CartesianGrid stroke={CHART_GRID} vertical={false} />
+            <XAxis
+              dataKey="month"
+              tick={{ fontSize: 12, fill: CHART_INK }}
               axisLine={false}
               tickLine={false}
-              tickFormatter={(v: number) => `$${Math.round(v / 1000)}k`}
-              width={44}
+              tickMargin={10}
+              tickFormatter={(m: string) => m.replace(".", "").slice(0, 3)}
             />
-            <Tooltip formatter={(value: number) => formatCurrency(value)} contentStyle={{ borderRadius: 12, border: "1px solid #D9DEE5", fontSize: 12 }} />
-            <Legend wrapperStyle={{ fontSize: 12 }} />
-            <Area type="monotone" dataKey="ingresos" name="Ingresos" stroke="#2158B5" strokeWidth={2} fill="url(#incomeGradient)" />
-            <Area type="monotone" dataKey="gastos" name="Gastos" stroke="#D32F2F" strokeWidth={2} fill="url(#expenseGradient)" />
+            <YAxis tick={{ fontSize: 12, fill: CHART_INK }} axisLine={false} tickLine={false} tickFormatter={abreviar} width={48} />
+            <Tooltip
+              cursor={{ stroke: "#C9D3E3", strokeDasharray: "4 4" }}
+              content={<ChartTooltip format={(v) => formatCurrency(v)} />}
+            />
+            <Area
+              type="monotoneX"
+              dataKey="ingresos"
+              name="Ingresos"
+              stroke={AZUL}
+              strokeWidth={2.5}
+              fill="url(#relleno-ingresos)"
+              activeDot={{ r: 5, strokeWidth: 3, stroke: "#fff" }}
+              dot={false}
+              isAnimationActive={false}
+            />
+            <Area
+              type="monotoneX"
+              dataKey="gastos"
+              name="Gastos"
+              stroke={ROJO}
+              strokeWidth={2}
+              strokeDasharray="5 4"
+              fill="url(#relleno-gastos)"
+              activeDot={{ r: 5, strokeWidth: 3, stroke: "#fff" }}
+              dot={false}
+              isAnimationActive={false}
+            />
           </AreaChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </ChartCard>
   );
 }

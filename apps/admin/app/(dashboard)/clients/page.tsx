@@ -16,11 +16,11 @@ export default async function ClientsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-paxo-blue">Clientes</h1>
+          <h1 className="text-2xl font-extrabold text-paxo-ink sm:text-[1.75rem]">Clientes</h1>
           <p className="text-sm text-paxo-ink-light">CRM — historial y seguimiento de clientes.</p>
         </div>
         <Link href="/clients/new">
-          <Button>Nuevo cliente</Button>
+          <Button variant="secondary">Nuevo cliente</Button>
         </Link>
       </div>
 

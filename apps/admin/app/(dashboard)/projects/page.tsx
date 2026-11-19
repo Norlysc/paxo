@@ -24,11 +24,11 @@ export default async function ProjectsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-paxo-blue">Proyectos</h1>
+          <h1 className="text-2xl font-extrabold text-paxo-ink sm:text-[1.75rem]">Proyectos</h1>
           <p className="text-sm text-paxo-ink-light">Cronograma, presupuesto y avance de obras.</p>
         </div>
         <Link href="/projects/new">
-          <Button>Nuevo proyecto</Button>
+          <Button variant="secondary">Nuevo proyecto</Button>
         </Link>
       </div>
 

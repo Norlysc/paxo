@@ -22,7 +22,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-paxo-blue">{client.full_name}</h1>
+        <h1 className="text-2xl font-extrabold text-paxo-ink sm:text-[1.75rem]">{client.full_name}</h1>
         {client.company_name && <p className="text-sm text-paxo-ink-light">{client.company_name}</p>}
       </div>
 

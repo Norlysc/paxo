@@ -78,7 +78,7 @@ export function ProjectForm({ clients }: { clients: ClientOption[] }) {
         </div>
       </div>
       {serverError && <p className="text-sm text-paxo-red">{serverError}</p>}
-      <Button type="submit" disabled={isSubmitting}>
+      <Button type="submit" variant="secondary" disabled={isSubmitting}>
         {isSubmitting ? "Guardando..." : "Crear proyecto"}
       </Button>
     </form>

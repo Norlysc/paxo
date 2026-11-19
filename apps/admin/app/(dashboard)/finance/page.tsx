@@ -22,7 +22,7 @@ export default async function FinancePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-paxo-blue">Gestión Financiera</h1>
+        <h1 className="text-2xl font-extrabold text-paxo-ink sm:text-[1.75rem]">Gestión Financiera</h1>
         <p className="text-sm text-paxo-ink-light">Ingresos, gastos y utilidad (últimos 50 movimientos).</p>
       </div>
 

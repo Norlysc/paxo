@@ -24,11 +24,11 @@ export default async function QuotesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-paxo-blue">Cotizaciones</h1>
+          <h1 className="text-2xl font-extrabold text-paxo-ink sm:text-[1.75rem]">Cotizaciones</h1>
           <p className="text-sm text-paxo-ink-light">Control de estados y seguimiento comercial.</p>
         </div>
         <Link href="/quotes/new">
-          <Button>Nueva cotización</Button>
+          <Button variant="secondary">Nueva cotización</Button>
         </Link>
       </div>
 

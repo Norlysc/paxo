@@ -136,7 +136,7 @@ export function QuoteForm({ clients }: { clients: ClientOption[] }) {
       </div>
 
       {serverError && <p className="text-sm text-paxo-red">{serverError}</p>}
-      <Button type="submit" disabled={isSubmitting}>
+      <Button type="submit" variant="secondary" disabled={isSubmitting}>
         {isSubmitting ? "Guardando..." : "Crear cotización"}
       </Button>
     </form>

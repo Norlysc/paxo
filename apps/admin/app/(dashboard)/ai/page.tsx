@@ -18,7 +18,7 @@ export default async function AiAssistantPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-paxo-blue">Asistente Empresarial IA</h1>
+        <h1 className="text-2xl font-extrabold text-paxo-ink sm:text-[1.75rem]">Asistente Empresarial IA</h1>
         <p className="text-sm text-paxo-ink-light">
           Analiza ventas, gastos, clientes y proyectos, y genera recomendaciones a partir de los datos actuales del
           negocio.

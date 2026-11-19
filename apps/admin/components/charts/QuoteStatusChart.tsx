@@ -1,43 +1,55 @@
 "use client";
 
-import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { ChartCard, EmptyChart } from "./ChartCard";
 
-const COLORS: Record<string, string> = {
-  Borrador: "#4B5563",
-  Enviada: "#0EA5E9",
-  Aceptada: "#22C55E",
-  Rechazada: "#DC2626",
-  Vencida: "#F59E0B",
+const COLORES: Record<string, string> = {
+  Borrador: "#8A93A6",
+  Enviada: "#2150A2",
+  Aceptada: "#1F9D6B",
+  Rechazada: "#BF1F2E",
+  Vencida: "#E5A33B",
 };
 
+/**
+ * Cotizaciones por estado como barras con riel: con pocas cotizaciones una
+ * grafica con ejes se ve vacia; asi cada estado se lee de un vistazo.
+ */
 export function QuoteStatusChart({ data }: { data: { label: string; count: number }[] }) {
   const total = data.reduce((acc, d) => acc + d.count, 0);
+  const max = Math.max(1, ...data.map((d) => d.count));
 
   return (
-    <div className="rounded-2xl border border-paxo-neutral-dark bg-white p-5 shadow-sm">
-      <p className="font-display text-base font-semibold text-paxo-ink">Cotizaciones por estado</p>
-      <p className="text-xs text-paxo-ink-light">
-        {total} cotizaci{total === 1 ? "ón" : "ones"} registrada{total === 1 ? "" : "s"}
-      </p>
-      <div className="mt-4 h-56">
-        {total === 0 ? (
-          <div className="flex h-full items-center justify-center text-sm text-paxo-ink-light">Sin datos todavía</div>
-        ) : (
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} layout="vertical" margin={{ left: 8, right: 16, top: 8, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#D9DEE5" horizontal={false} />
-              <XAxis type="number" tick={{ fontSize: 12, fill: "#4B5563" }} axisLine={false} tickLine={false} allowDecimals={false} />
-              <YAxis type="category" dataKey="label" tick={{ fontSize: 12, fill: "#4B5563" }} axisLine={false} tickLine={false} width={78} />
-              <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #D9DEE5", fontSize: 12 }} />
-              <Bar dataKey="count" radius={[0, 6, 6, 0]} barSize={18}>
-                {data.map((entry) => (
-                  <Cell key={entry.label} fill={COLORS[entry.label] ?? "#2158B5"} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        )}
-      </div>
-    </div>
+    <ChartCard
+      title="Cotizaciones por estado"
+      subtitle={`${total} cotizaci${total === 1 ? "ón registrada" : "ones registradas"}`}
+    >
+      {total === 0 ? (
+        <div className="mt-6 h-40">
+          <EmptyChart>Cuando crees cotizaciones, verás aquí en qué estado están.</EmptyChart>
+        </div>
+      ) : (
+        <ul className="mt-6 grid gap-x-10 gap-y-4 md:grid-cols-2">
+          {data.map((d) => {
+            const pct = total ? Math.round((d.count / total) * 100) : 0;
+            return (
+              <li key={d.label}>
+                <div className="flex items-baseline justify-between text-sm">
+                  <span className="font-semibold text-paxo-ink">{d.label}</span>
+                  <span className="tabular-nums text-paxo-ink-light">
+                    <span className="font-bold text-paxo-ink">{d.count}</span> · {pct}%
+                  </span>
+                </div>
+                <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-paxo-neutral">
+                  <div
+                    className="h-full rounded-full transition-[width] duration-700 ease-out"
+                    style={{ width: `${(d.count / max) * 100}%`, background: COLORES[d.label] ?? "#2150A2" }}
+                  />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </ChartCard>
   );
 }

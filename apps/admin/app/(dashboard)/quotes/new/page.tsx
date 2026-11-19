@@ -10,7 +10,7 @@ export default async function NewQuotePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold text-paxo-blue">Nueva cotización</h1>
+        <h1 className="text-2xl font-extrabold text-paxo-ink sm:text-[1.75rem]">Nueva cotización</h1>
         <p className="text-sm text-paxo-ink-light">Genera una cotización para un cliente existente.</p>
       </div>
       <QuoteForm clients={clients ?? []} />

@@ -35,14 +35,16 @@ export function LoginForm() {
     }
 
     const supabase = createSupabaseBrowserClient();
-    const { data, error } = await supabase.auth.signInWithPassword(values);
-
-    console.log("LOGIN DATA:", data);
-    console.log("LOGIN ERROR:", error);
+    const { error } = await supabase.auth.signInWithPassword(values);
 
     if (error) {
-      console.error(error);
-      setServerError(error.message);
+      setServerError(
+        error.message === "Invalid login credentials"
+          ? "Correo o contraseña incorrectos."
+          : error.message === "Email not confirmed"
+            ? "Tu correo aún no está confirmado. Revisa tu bandeja de entrada."
+            : "No pudimos iniciar sesión. Inténtalo de nuevo en unos segundos."
+      );
       return;
     }
 
@@ -51,7 +53,7 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-sm space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-sm space-y-5">
       <div>
         <Label htmlFor="email">Correo</Label>
         <Input id="email" type="email" autoComplete="email" {...register("email")} />
@@ -62,8 +64,12 @@ export function LoginForm() {
         <Input id="password" type="password" autoComplete="current-password" {...register("password")} />
         {errors.password && <p className="mt-1 text-xs text-paxo-red">{errors.password.message}</p>}
       </div>
-      {serverError && <p className="text-sm text-paxo-red">{serverError}</p>}
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
+      {serverError && (
+        <p role="alert" className="rounded-xl bg-paxo-red-soft px-3 py-2.5 text-sm font-medium text-paxo-red">
+          {serverError}
+        </p>
+      )}
+      <Button type="submit" variant="secondary" size="lg" className="w-full text-sm" disabled={isSubmitting}>
         {isSubmitting ? "Ingresando..." : "Ingresar"}
       </Button>
     </form>
