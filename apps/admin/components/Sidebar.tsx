@@ -40,12 +40,16 @@ export function Sidebar({ role }: { role: StaffRole }) {
   const isActive = useIsActive();
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-paxo-neutral-dark bg-white md:flex">
-      <Link href="/" className="flex h-20 items-center px-6" aria-label="Soluciones PAXO — inicio del panel">
-        <Image src="/brand/paxo-logo.svg" alt="Soluciones PAXO C.A." width={1963} height={598} priority className="h-14 w-auto" />
+    <aside className="hex-pattern sticky top-0 hidden h-screen w-72 shrink-0 flex-col overflow-hidden bg-paxo-navy text-white md:flex">
+      {/* Mismo fondo que la galeria de la landing y el bloque de finanzas. */}
+      <div aria-hidden className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-paxo-blue/45 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -bottom-32 -right-24 h-72 w-72 rounded-full bg-paxo-blue/30 blur-3xl" />
+
+      <Link href="/" className="relative flex h-24 items-center px-7" aria-label="Soluciones PAXO — inicio del panel">
+        <Image src="/brand/paxo-logo-white.svg" alt="Soluciones PAXO C.A." width={1963} height={598} priority className="h-14 w-auto" />
       </Link>
 
-      <nav className="flex flex-1 flex-col gap-1 px-3 pt-4" aria-label="Secciones del panel">
+      <nav className="relative flex flex-1 flex-col gap-1.5 px-4 pt-4" aria-label="Secciones del panel">
         {itemsFor(role).map((item) => {
           const active = isActive(item.href);
           const Icon = item.icon;
@@ -55,23 +59,21 @@ export function Sidebar({ role }: { role: StaffRole }) {
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors",
-                active
-                  ? "bg-paxo-blue-soft text-paxo-blue"
-                  : "text-paxo-ink-light hover:bg-paxo-neutral hover:text-paxo-ink"
+                "group relative flex items-center gap-3.5 rounded-xl px-4 py-3 text-[0.95rem] font-semibold transition-colors",
+                active ? "bg-white/[0.12] text-white" : "text-white/70 hover:bg-white/[0.07] hover:text-white"
               )}
             >
-              {active && <span aria-hidden className="absolute -left-3 top-2 bottom-2 w-1 rounded-r-full bg-paxo-red" />}
-              <Icon className="h-[1.125rem] w-[1.125rem] shrink-0" strokeWidth={2.1} aria-hidden />
+              {active && <span aria-hidden className="absolute -left-4 top-2.5 bottom-2.5 w-1 rounded-r-full bg-paxo-red" />}
+              <Icon className="h-5 w-5 shrink-0" strokeWidth={2} aria-hidden />
               {item.label}
             </Link>
           );
         })}
       </nav>
 
-      <div className="m-4 rounded-2xl bg-paxo-navy hex-pattern p-4 text-white">
+      <div className="relative m-5 rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10">
         <p className="text-sm font-bold">Panel interno</p>
-        <p className="mt-1 text-xs leading-relaxed text-white/70">Solo para el equipo de PAXO. No compartas tu acceso.</p>
+        <p className="mt-1 text-xs leading-relaxed text-white/65">Solo para el equipo de PAXO. No compartas tu acceso.</p>
       </div>
     </aside>
   );
