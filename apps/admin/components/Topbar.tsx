@@ -57,7 +57,7 @@ export function Topbar({ fullName, roleLabel }: { fullName: string | null; roleL
             title="Cerrar sesión"
             className="ml-1 flex h-9 w-9 items-center justify-center rounded-xl text-paxo-ink-light transition-colors hover:bg-paxo-red-soft hover:text-paxo-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-paxo-blue"
           >
-            <LogOut className="h-[18px] w-[18px]" aria-hidden />
+            <LogOut className="h-[1.125rem] w-[1.125rem]" aria-hidden />
           </button>
         </div>
       </div>

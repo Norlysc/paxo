@@ -12,7 +12,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar fullName={staff.fullName} roleLabel={ROLE_LABELS[staff.role]} />
         <MobileNav role={staff.role} />
-        <main className="mx-auto w-full max-w-[1400px] flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+        <main className="mx-auto w-full max-w-[88rem] flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
     </div>
   );

@@ -136,7 +136,7 @@ function Cifra({ icon: Icon, label, valor, tono }: { icon: LucideIcon; label: st
   return (
     <div className="border-paxo-neutral-dark p-5 [&:nth-child(-n+2)]:border-b sm:border-l sm:first:border-l-0 sm:[&:nth-child(-n+2)]:border-b-0 [&:nth-child(even)]:border-l">
       <span className={cn("flex h-9 w-9 items-center justify-center rounded-xl", TONOS[tono])}>
-        <Icon className="h-[18px] w-[18px]" aria-hidden />
+        <Icon className="h-[1.125rem] w-[1.125rem]" aria-hidden />
       </span>
       <p className="cifra mt-4 text-2xl font-extrabold text-paxo-ink">{valor}</p>
       <p className="mt-0.5 text-sm text-paxo-ink-light">{label}</p>

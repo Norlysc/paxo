@@ -62,7 +62,7 @@ export function Sidebar({ role }: { role: StaffRole }) {
               )}
             >
               {active && <span aria-hidden className="absolute -left-3 top-2 bottom-2 w-1 rounded-r-full bg-paxo-red" />}
-              <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2.1} aria-hidden />
+              <Icon className="h-[1.125rem] w-[1.125rem] shrink-0" strokeWidth={2.1} aria-hidden />
               {item.label}
             </Link>
           );

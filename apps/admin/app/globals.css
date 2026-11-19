@@ -7,6 +7,30 @@
   --font-display: var(--font-manrope), system-ui, sans-serif;
 }
 
+/*
+ * Todo el panel se mide en rem: subir el tamano base agranda letras,
+ * iconos y espacios por igual. En monitores anchos el texto a 16px se ve
+ * diminuto, asi que la base crece con la pantalla.
+ */
+html {
+  font-size: 100%;
+}
+@media (min-width: 1280px) {
+  html {
+    font-size: 106.25%; /* 17px */
+  }
+}
+@media (min-width: 1600px) {
+  html {
+    font-size: 112.5%; /* 18px */
+  }
+}
+@media (min-width: 1880px) {
+  html {
+    font-size: 118.75%; /* 19px */
+  }
+}
+
 body {
   @apply bg-paxo-neutral text-paxo-ink antialiased;
   font-family: var(--font-sans);

@@ -42,13 +42,13 @@ export function RevenueTrendChart({ data }: { data: { month: string; ingresos: n
             <CartesianGrid stroke={CHART_GRID} vertical={false} />
             <XAxis
               dataKey="month"
-              tick={{ fontSize: 12, fill: CHART_INK }}
+              tick={{ fontSize: "0.8rem", fill: CHART_INK }}
               axisLine={false}
               tickLine={false}
               tickMargin={10}
               tickFormatter={(m: string) => m.replace(".", "").slice(0, 3)}
             />
-            <YAxis tick={{ fontSize: 12, fill: CHART_INK }} axisLine={false} tickLine={false} tickFormatter={abreviar} width={48} />
+            <YAxis tick={{ fontSize: "0.8rem", fill: CHART_INK }} axisLine={false} tickLine={false} tickFormatter={abreviar} width={60} />
             <Tooltip
               cursor={{ stroke: "#C9D3E3", strokeDasharray: "4 4" }}
               content={<ChartTooltip format={(v) => formatCurrency(v)} />}
