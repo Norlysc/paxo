@@ -44,7 +44,7 @@ export function ContactSection() {
         <div id="contacto" className="rounded-3xl border border-white/15 bg-white/[0.07] p-5 shadow-2xl shadow-[#061d46]/20 backdrop-blur-sm sm:p-7">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#ffc2c7]">Atención directa</p>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#e5394a]">Atención directa</p>
               <h3 className="mt-2 text-2xl font-bold text-white">Estamos para ayudarte</h3>
             </div>
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-paxo-blue-dark">

@@ -126,8 +126,8 @@ export function Footer() {
 function FooterColumn({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
   return (
     <div className={className}>
-      <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[#ffc2c7]">
-        <span aria-hidden className="h-0.5 w-4 rounded-full bg-[#ffc2c7]" />
+      <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-[#e5394a]">
+        <span aria-hidden className="h-0.5 w-4 rounded-full bg-paxo-red" />
         {title}
       </p>
       <ul className="mt-5 space-y-3 text-sm text-white/70">{children}</ul>

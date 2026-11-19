@@ -31,10 +31,10 @@ export function SectionHeading({
           "inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.2em]",
           // El rojo de marca no alcanza contraste sobre el azul oscuro; ahi se
           // usa un tinte claro del mismo rojo.
-          dark ? "text-[#ffc2c7]" : "text-paxo-red"
+          dark ? "text-[#e5394a]" : "text-paxo-red"
         )}
       >
-        <span aria-hidden className={cn("h-0.5 w-6 rounded-full", dark ? "bg-[#ffc2c7]" : "bg-paxo-red")} />
+        <span aria-hidden className={cn("h-0.5 w-6 rounded-full", "bg-paxo-red")} />
         {eyebrow}
       </p>
       <h2
