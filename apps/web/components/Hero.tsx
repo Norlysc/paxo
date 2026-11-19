@@ -58,7 +58,7 @@ export function Hero() {
               <motion.a href="#cotizar" whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }} className="group block sm:inline-block">
                 <Button
                   size="lg"
-                  className="btn-shine w-full rounded-xl px-7 shadow-[0_18px_35px_-20px_rgba(191, 31, 46,0.7)] group-hover:shadow-[0_22px_40px_-18px_rgba(191, 31, 46,0.85)]"
+                  className="btn-shine w-full rounded-xl px-7 shadow-[0_18px_35px_-20px_rgba(191,31,46,0.7)] group-hover:shadow-[0_22px_40px_-18px_rgba(191,31,46,0.85)]"
                 >
                   Solicitar Asesoría Personalizada
                   <ArrowRight

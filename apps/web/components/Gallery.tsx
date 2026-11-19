@@ -165,10 +165,13 @@ export function Gallery() {
   );
 
   return (
-    <section id="obras" className="relative scroll-mt-24 overflow-hidden bg-[#071d45] py-20 sm:py-24">
+    <section id="obras" className="hex-pattern relative scroll-mt-24 overflow-hidden bg-[#0E2550] py-20 sm:py-24">
+      {/* Fondo igual al bloque de finanzas del panel admin: navy con patron
+          de hexagonos y un resplandor azul. */}
+      <div aria-hidden className="pointer-events-none absolute -right-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-paxo-blue/50 blur-3xl" />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_100%,rgba(33, 80, 162,0.45),transparent_70%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_100%,rgba(33,80,162,0.35),transparent_70%)]"
       />
 
       <div className="relative mx-auto flex max-w-6xl flex-col gap-6 px-4 sm:px-6 md:flex-row md:items-end md:justify-between">
