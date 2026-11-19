@@ -99,7 +99,7 @@ async function sendEmail(values: QuoteRequestInput) {
     ].join("\n"),
     html: `
       <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;color:#111827">
-        <div style="background:#18438e;color:#fff;padding:20px 24px;border-radius:12px 12px 0 0;border-bottom:4px solid #a61d28">
+        <div style="background:#173b7a;color:#fff;padding:20px 24px;border-radius:12px 12px 0 0;border-bottom:4px solid #bf1f2e">
           <p style="margin:0;font-size:12px;letter-spacing:2px;text-transform:uppercase;opacity:.8">Página web · SOLUCIONES PAXO C.A.</p>
           <h1 style="margin:6px 0 0;font-size:20px">Nueva solicitud de asesoría</h1>
         </div>

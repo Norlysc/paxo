@@ -32,7 +32,7 @@ export function Footer() {
     <footer className="relative overflow-hidden bg-[#071d45] text-white">
       <div aria-hidden className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-paxo-red via-paxo-red to-paxo-blue" />
       <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 opacity-[0.06]">
-        <Image src="/brand/logo-icon-mono.png" alt="" fill sizes="384px" className="object-contain mix-blend-screen invert" />
+        <Image src="/brand/paxo-mark-white.svg" alt="" fill sizes="384px" className="object-contain" />
       </div>
       <div aria-hidden className="pointer-events-none absolute -bottom-40 -left-32 h-[26rem] w-[26rem] rounded-full border-[26px] border-paxo-blue/20" />
 
@@ -61,9 +61,7 @@ export function Footer() {
 
         <div className="grid grid-cols-2 gap-x-6 gap-y-10 py-12 md:grid-cols-[1.4fr_1fr_1fr_1.3fr]">
           <div className="col-span-2 md:col-span-1">
-            <div className="inline-flex rounded-2xl bg-white px-4 py-2.5 shadow-lg shadow-black/30">
-              <Image src="/brand/logo-full.jpg" alt={COMPANY.legalName} width={1000} height={500} className="h-14 w-auto object-contain" />
-            </div>
+            <Image src="/brand/paxo-logo-white.svg" alt={COMPANY.legalName} width={1963} height={598} className="h-12 w-auto" />
             <p className="mt-5 max-w-xs text-sm leading-6 text-white/65">
               Construcción, mantenimiento y seguridad electrónica integral en Venezuela.
             </p>

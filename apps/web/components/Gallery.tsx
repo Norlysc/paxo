@@ -168,7 +168,7 @@ export function Gallery() {
     <section id="obras" className="relative scroll-mt-24 overflow-hidden bg-[#071d45] py-20 sm:py-24">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_100%,rgba(33,88,181,0.45),transparent_70%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_100%,rgba(33, 80, 162,0.45),transparent_70%)]"
       />
 
       <div className="relative mx-auto flex max-w-6xl flex-col gap-6 px-4 sm:px-6 md:flex-row md:items-end md:justify-between">

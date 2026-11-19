@@ -43,13 +43,14 @@ export function Header() {
     >
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4 sm:px-6 lg:h-24">
         <a href="#" className="flex shrink-0 items-center" aria-label={COMPANY.legalName}>
+          {/* Logo vectorial extraido del PDF original: nitido a cualquier tamano. */}
           <Image
-            src="/brand/logo-full.jpg"
+            src="/brand/paxo-logo.svg"
             alt={COMPANY.legalName}
-            width={1000}
-            height={500}
+            width={1963}
+            height={598}
             priority
-            className="h-14 w-auto object-contain sm:h-16 lg:h-20"
+            className="h-11 w-auto sm:h-12 lg:h-14"
           />
         </a>
 

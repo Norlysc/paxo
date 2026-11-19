@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Manrope } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope", display: "swap" });
 
 const GA4_ID = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID;
 const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.solucionespaxo.com"),
-  // Los iconos los resuelve Next.js desde app/icon.jpg y app/apple-icon.jpg.
+  // Los iconos los resuelve Next.js desde app/icon.svg (isotipo) y app/apple-icon.png.
   // No declarar `icons` aqui: un override manual gana sobre esos archivos.
   title: {
     default: "SOLUCIONES PAXO C.A. | Construcción, Mantenimiento y Seguridad Electrónica",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es-VE" className={inter.variable}>
+    <html lang="es-VE" className={manrope.variable}>
       <body>
         {children}
 

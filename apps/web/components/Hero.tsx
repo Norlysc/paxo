@@ -58,7 +58,7 @@ export function Hero() {
               <motion.a href="#cotizar" whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }} className="group block sm:inline-block">
                 <Button
                   size="lg"
-                  className="btn-shine w-full rounded-xl px-7 shadow-[0_18px_35px_-20px_rgba(166,29,40,0.7)] group-hover:shadow-[0_22px_40px_-18px_rgba(166,29,40,0.85)]"
+                  className="btn-shine w-full rounded-xl px-7 shadow-[0_18px_35px_-20px_rgba(191, 31, 46,0.7)] group-hover:shadow-[0_22px_40px_-18px_rgba(191, 31, 46,0.85)]"
                 >
                   Solicitar Asesoría Personalizada
                   <ArrowRight
@@ -105,7 +105,7 @@ export function Hero() {
         preserveAspectRatio="none"
       >
         <path d="M0 76C245 18 445 161 725 129C1000 97 1198 8 1440 69V180H0V76Z" fill="#fff" />
-        <path d="M0 67C245 9 445 152 725 120C1000 88 1198 -1 1440 60" fill="none" stroke="#A61D28" strokeOpacity="0.75" strokeWidth="5" />
+        <path d="M0 67C245 9 445 152 725 120C1000 88 1198 -1 1440 60" fill="none" stroke="#bf1f2e" strokeOpacity="0.75" strokeWidth="5" />
       </svg>
     </section>
   );
